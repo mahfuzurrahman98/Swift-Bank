@@ -1,0 +1,22 @@
+# client files to ignore
+client/# Logs
+client/logs
+client/*.log
+client/npm-debug.log*
+
+client/node_modules
+client/dist
+client/dist-ssr
+client/*.local
+
+client/# Editor directories and files
+client/.vscode/*
+client/!.vscode/extensions.json
+client/.DS_Store
+client/.env
+
+# server files to ignore
+server/.env
+server/node_modules
+server/dist
+server/tests

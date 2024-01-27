@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/v1/:path*",
+            "destination": "https://api-ds-test.vercel.app/api/v1/:path*"
+        },
+        {
+            "source": "/api/v1/:path*/",
+            "destination": "https://api-ds-test.vercel.app/api/v1/:path*"
+        },
+        {
+            "source": "/:path*",
+            "destination": "/"
+        }
+    ]
+}
