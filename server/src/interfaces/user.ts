@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import { Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -9,4 +10,8 @@ export interface IUser extends Document {
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date | null;
+}
+
+export interface IRequestWithUser extends Request {
+    user?: object;
 }

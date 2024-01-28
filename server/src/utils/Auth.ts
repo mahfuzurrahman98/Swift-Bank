@@ -1,10 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
+import { IRequestWithUser } from '../interfaces/user';
 import CustomError from './CustomError';
-
-interface IRequestWithUser extends Request {
-    user?: object;
-}
 
 class Auth {
     public static createAccessToken(user: object): string {
