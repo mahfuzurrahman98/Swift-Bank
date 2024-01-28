@@ -1,16 +1,24 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+import { IRequestUser, IRequestWithUser } from '../../interfaces/user';
 import CustomError from '../../utils/CustomError';
 import transactionModel from '../transactions/transactions.model';
+import userModel from '../users/users.model';
 import accountModel from './accounts.model';
 
 const accountsHandlers = {
     deposit: async (
-        req: Request<{ userId: string }>,
+        req: IRequestWithUser,
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { userId } = req.params;
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
             const { amount } = req.body;
 
             if (!amount || typeof amount !== 'number' || amount <= 0) {
@@ -29,8 +37,6 @@ const accountsHandlers = {
                 userId,
                 amount,
                 type: 'deposit',
-                createdAt: new Date(),
-                updatedAt: new Date(),
             });
 
             return res.status(200).json({
@@ -46,12 +52,18 @@ const accountsHandlers = {
     },
 
     withdraw: async (
-        req: Request<{ userId: string }>,
+        req: IRequestWithUser,
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { userId } = req.params;
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
             const { amount } = req.body;
 
             if (!amount || typeof amount !== 'number' || amount <= 0) {
@@ -74,8 +86,6 @@ const accountsHandlers = {
                 userId,
                 amount,
                 type: 'withdraw',
-                createdAt: new Date(),
-                updatedAt: new Date(),
             });
 
             return res.status(200).json({
@@ -91,30 +101,47 @@ const accountsHandlers = {
     },
 
     transfer: async (
-        req: Request<{ userId: string }>,
+        req: IRequestWithUser,
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { userId } = req.params;
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
             const { toUserId, amount } = req.body;
 
             if (
                 !toUserId ||
                 typeof toUserId !== 'string' ||
-                !amount ||
-                typeof amount !== 'number' ||
-                amount <= 0
+                userId.trim().length === 0
             ) {
-                return next(new CustomError(422, 'Invalid data'));
+                return next(new CustomError(422, 'Invalid user id'));
+            }
+
+            const toUser = await userModel.findOne({ _id: toUserId });
+            if (!toUser) {
+                return next(new CustomError(404, 'Invalid user id'));
+            }
+
+            if (!amount || typeof amount !== 'number' || amount <= 0) {
+                return next(new CustomError(422, 'Invalid amount'));
             }
 
             const fromAccount = await accountModel.findOne({ userId });
             const toAccount = await accountModel.findOne({ userId: toUserId });
 
-            if (!fromAccount || !toAccount) {
+            if (!fromAccount) {
+                return next(new CustomError(404, 'Source account not found'));
+            }
+
+            if (!toAccount) {
                 return next(
-                    new CustomError(404, 'One or more accounts not found')
+                    new CustomError(404, 'Destination account not found')
                 );
             }
 
@@ -133,8 +160,6 @@ const accountsHandlers = {
                 toUserId,
                 amount,
                 type: 'transfer',
-                createdAt: new Date(),
-                updatedAt: new Date(),
             });
 
             return res.status(200).json({

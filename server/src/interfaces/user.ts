@@ -12,6 +12,12 @@ export interface IUser extends Document {
     deletedAt?: Date | null;
 }
 
+export interface IRequestUser {
+    id: string;
+    name: string;
+    email: string;
+}
+
 export interface IRequestWithUser extends Request {
-    user?: object;
+    user?: IRequestUser;
 }

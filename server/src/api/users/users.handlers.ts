@@ -4,6 +4,7 @@ import { IUser } from '../../interfaces/user';
 import Auth from '../../utils/Auth';
 import CustomError from '../../utils/CustomError';
 import Hash from '../../utils/Hash';
+import accountModel from '../accoutns/accounts.model';
 import userModel from './users.model';
 
 interface CreateUserRequestBody {
@@ -70,7 +71,7 @@ const usersHandlers = {
             // check if user already exists
             const existingUser = await userModel.findOne({ email });
             if (existingUser) {
-                next(
+                return next(
                     new CustomError(409, 'The email address is already in use')
                 );
             }
@@ -86,13 +87,19 @@ const usersHandlers = {
                 active: true,
             });
 
+            // create account
+            const account = await accountModel.create({
+                userId: user.id,
+                balance: 0,
+            });
+
             // remove password from response
             user.password = undefined;
 
             return res.status(201).json({
                 success: true,
-                message: 'User created successfully',
-                data: { user },
+                message: 'Account created successfully',
+                data: { user, account },
             });
         } catch (error: any) {
             return next(
@@ -142,9 +149,13 @@ const usersHandlers = {
 
             // create access token, and refresh token
             const accessToken = Auth.createAccessToken({
+                id: user.id,
+                name: user.name,
                 email: user.email,
             });
             const refreshToken = Auth.createRefreshToken({
+                id: user.id,
+                name: user.name,
                 email: user.email,
             });
 
