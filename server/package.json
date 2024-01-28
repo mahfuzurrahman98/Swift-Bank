@@ -1,5 +1,5 @@
 {
-    "name": "smart-banking",
+    "name": "swift-banking",
     "version": "1.0.0",
     "description": "smart banking app to track savings",
     "main": "index.js",
