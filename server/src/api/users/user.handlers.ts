@@ -100,6 +100,7 @@ const usersHandlers = {
             const account: IAccount = new accountModel({
                 userId: user.id,
                 balance: 0,
+                active: false,
             });
             await account.save({ session });
 

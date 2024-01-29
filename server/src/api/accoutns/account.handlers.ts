@@ -30,6 +30,12 @@ const accountsHandlers = {
             }
 
             account.balance += amount;
+
+            // if account is not active, then active it
+            // this will happen when the first deposit
+            if (!account.active) {
+                account.active = true;
+            }
             await account.save();
 
             const transaction = await transactionModel.create({
