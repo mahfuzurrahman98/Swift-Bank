@@ -22,12 +22,16 @@ router.post('/accounts/withdraw', authMiddleware, accountsHandlers.withdraw); //
 router.post('/accounts/transfer', authMiddleware, accountsHandlers.transfer); // transfer
 
 // beneficiaries routes
-// router.get('/beneficiaries', authMiddleware, accountsHandlers.getBeneficiaries);
+router.get('/beneficiaries', authMiddleware, accountsHandlers.getBeneficiaries);
 router.post(
     '/accounts/beneficiaries',
     authMiddleware,
     accountsHandlers.createBeneficiary
-);
-router.delete('/accounts/beneficiaries/:id', authMiddleware, accountsHandlers.deleteBeneficiary);
+); // create beneficiary
+router.delete(
+    '/accounts/beneficiaries/:id',
+    authMiddleware,
+    accountsHandlers.deleteBeneficiary
+); // delete beneficiary
 
 export default router;
