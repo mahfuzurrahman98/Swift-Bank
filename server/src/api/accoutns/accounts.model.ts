@@ -31,6 +31,12 @@ try {
                 required: true,
                 default: true,
             },
+            beneficiaries: [
+                {
+                    type: Schema.Types.ObjectId,
+                    ref: 'users',
+                },
+            ],
             deletedAt: {
                 type: Date,
                 default: null,
