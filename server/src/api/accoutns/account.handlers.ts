@@ -69,7 +69,7 @@ const accountsHandlers = {
             await account.save();
 
             const transaction: ITransaction = await transactionModel.create({
-                userId,
+                fromAccountId: account._id,
                 amount,
                 type: 'deposit',
                 balance: account.balance,
@@ -119,7 +119,7 @@ const accountsHandlers = {
             await account.save();
 
             const transaction: ITransaction = await transactionModel.create({
-                userId,
+                fromAccountId: account._id,
                 amount,
                 type: 'withdraw',
                 balance: account.balance,
