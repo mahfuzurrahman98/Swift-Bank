@@ -173,6 +173,116 @@ const accountsHandlers = {
             );
         }
     },
+
+    createBeneficiary: async (
+        req: IRequestWithUser,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
+            const { beneficiaryId } = req.body;
+
+            if (
+                !beneficiaryId ||
+                typeof beneficiaryId !== 'string' ||
+                beneficiaryId.trim().length === 0
+            ) {
+                return next(new CustomError(422, 'Invalid beneficiary id'));
+            }
+
+            const beneficiary = await accountModel.findOne({
+                _id: beneficiaryId,
+            });
+            if (!beneficiary) {
+                return next(new CustomError(404, 'No such account found'));
+            }
+
+            const account = await accountModel.findOne({ userId });
+            if (!account) {
+                return next(new CustomError(404, 'Account not found'));
+            }
+
+            if (!account.beneficiaries) {
+                account.beneficiaries = [];
+            }
+
+            if (account.beneficiaries.includes(beneficiaryId)) {
+                return next(new CustomError(400, 'Beneficiary already added'));
+            }
+
+            account.beneficiaries.push(beneficiaryId);
+            await account.save();
+
+            return res.status(200).json({
+                success: true,
+                message: 'Beneficiary added successfully',
+                data: { account },
+            });
+        } catch (error: any) {
+            return next(
+                new CustomError(500, error.message || 'Something went wrong')
+            );
+        }
+    },
+
+    deleteBeneficiary: async (
+        req: IRequestWithUser,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
+            // find beneficiary id from request params /:id
+            const beneficiaryId = req.params.id;
+
+            if (
+                !beneficiaryId ||
+                typeof beneficiaryId !== 'string' ||
+                beneficiaryId.trim().length === 0
+            ) {
+                return next(new CustomError(422, 'Invalid beneficiary id'));
+            }
+
+            const account = await accountModel.findOne({ userId });
+            if (!account) {
+                return next(new CustomError(404, 'Source account not found'));
+            }
+            if (
+                !account.beneficiaries ||
+                !account.beneficiaries.includes(beneficiaryId)
+            ) {
+                return next(new CustomError(404, 'No such beneficiary found'));
+            }
+
+            account.beneficiaries = account.beneficiaries.filter(
+                (id) => id.toString() !== beneficiaryId
+            );
+            await account.save();
+
+            return res.status(200).json({
+                success: true,
+                message: 'Beneficiary deleted successfully',
+                data: { account },
+            });
+        } catch (error: any) {
+            return next(
+                new CustomError(500, error.message || 'Something went wrong')
+            );
+        }
+    },
 };
 
 export default accountsHandlers;
