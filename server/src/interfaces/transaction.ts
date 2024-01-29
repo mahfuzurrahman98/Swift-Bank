@@ -6,6 +6,7 @@ export interface ITransaction extends Document {
     fromAccountId: string;
     amount: number;
     type: 'deposit' | 'withdraw' | 'transfer';
+    balance: number;
     toAccountId?: string;
     createdAt: Date;
     updatedAt: Date;

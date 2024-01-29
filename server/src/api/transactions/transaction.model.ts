@@ -30,6 +30,10 @@ try {
                 required: true,
                 enum: ['deposit', 'withdraw', 'transfer'],
             },
+            balance: {
+                type: Number,
+                required: true,
+            },
             toAccountId: {
                 type: String,
             },
