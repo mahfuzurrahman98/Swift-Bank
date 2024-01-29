@@ -1,10 +1,40 @@
 import { NextFunction, Response } from 'express';
+import { ITransaction } from '../../interfaces/transaction';
 import { IRequestUser, IRequestWithUser } from '../../interfaces/user';
 import CustomError from '../../utils/CustomError';
 import transactionModel from '../transactions/transaction.model';
 import accountModel from './account.model';
 
 const accountsHandlers = {
+    getAccount: async (
+        req: IRequestWithUser,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
+            const account = await accountModel.findOne({ userId });
+
+            if (!account) {
+                return next(new CustomError(404, 'Account not found'));
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: 'Account fetched successfully',
+                data: { account },
+            });
+        } catch (error) {
+            return next(new CustomError(500, 'Something went wrong'));
+        }
+    },
+
     deposit: async (
         req: IRequestWithUser,
         res: Response,
@@ -38,10 +68,11 @@ const accountsHandlers = {
             }
             await account.save();
 
-            const transaction = await transactionModel.create({
+            const transaction: ITransaction = await transactionModel.create({
                 userId,
                 amount,
                 type: 'deposit',
+                balance: account.balance,
             });
 
             return res.status(200).json({
@@ -87,10 +118,11 @@ const accountsHandlers = {
             account.balance -= amount;
             await account.save();
 
-            const transaction = await transactionModel.create({
+            const transaction: ITransaction = await transactionModel.create({
                 userId,
                 amount,
                 type: 'withdraw',
+                balance: account.balance,
             });
 
             return res.status(200).json({
@@ -175,11 +207,12 @@ const accountsHandlers = {
             await fromAccount.save();
             await toAccount.save();
 
-            const transaction = await transactionModel.create({
+            const transaction: ITransaction = await transactionModel.create({
                 fromAccountId: fromAccount._id,
                 toAccountId,
                 amount,
                 type: 'transfer',
+                balance: fromAccount.balance,
             });
 
             return res.status(200).json({
@@ -356,7 +389,7 @@ const accountsHandlers = {
                 return next(new CustomError(404, 'Account not found'));
             }
 
-            const transactions = await transactionModel.find({
+            const transactions: ITransaction[] = await transactionModel.find({
                 fromAccountId: account._id,
             });
 

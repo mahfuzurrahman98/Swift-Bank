@@ -17,6 +17,7 @@ router.post('/users/refresh-token', usersHandlers.refreshToken); // refresh toke
 router.post('/users/logout', usersHandlers.logout); // logout user
 
 // accounts routes
+router.get('/accounts', authMiddleware, accountsHandlers.getAccount);
 router.post('/accounts/deposit', authMiddleware, accountsHandlers.deposit); // deposit
 router.post('/accounts/withdraw', authMiddleware, accountsHandlers.withdraw); // withdraw
 router.post('/accounts/transfer', authMiddleware, accountsHandlers.transfer); // transfer
