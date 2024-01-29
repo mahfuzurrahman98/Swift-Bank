@@ -22,7 +22,7 @@ router.post('/accounts/withdraw', authMiddleware, accountsHandlers.withdraw); //
 router.post('/accounts/transfer', authMiddleware, accountsHandlers.transfer); // transfer
 
 // beneficiaries routes
-router.get('/beneficiaries', authMiddleware, accountsHandlers.getBeneficiaries);
+router.get('/accounts/beneficiaries', authMiddleware, accountsHandlers.getBeneficiaries);
 router.post(
     '/accounts/beneficiaries',
     authMiddleware,
