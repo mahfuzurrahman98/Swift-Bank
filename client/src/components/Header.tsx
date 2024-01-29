@@ -1,9 +1,8 @@
-import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import useLogout from '../hooks/useLogout';
 
-const Header: FC = () => {
+const Header = () => {
   const { auth } = useAuth();
   const logout = useLogout();
 
@@ -15,7 +14,7 @@ const Header: FC = () => {
             to="/"
             className="text-2xl font-bold text-amber-800 leading-none"
           >
-            MERN Project
+            Swift Bank
           </Link>
         </div>
 
