@@ -34,4 +34,7 @@ router.delete(
     accountsHandlers.deleteBeneficiary
 ); // delete beneficiary
 
+// transaction routes
+router.get('/accounts/transactions', authMiddleware, accountsHandlers.getTransactions); // get all transactions
+
 export default router;

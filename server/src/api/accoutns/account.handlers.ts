@@ -337,6 +337,40 @@ const accountsHandlers = {
             );
         }
     },
+
+    getTransactions: async (
+        req: IRequestWithUser,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            if (!req?.user) {
+                return next(new CustomError(401, 'Unauthorized'));
+            }
+
+            const user: IRequestUser = req?.user;
+            const userId = user.id;
+
+            const account = await accountModel.findOne({ userId });
+            if (!account) {
+                return next(new CustomError(404, 'Account not found'));
+            }
+
+            const transactions = await transactionModel.find({
+                fromAccountId: account._id,
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: 'Transactions fetched successfully',
+                data: { transactions },
+            });
+        } catch (error: any) {
+            return next(
+                new CustomError(500, error.message || 'Something went wrong')
+            );
+        }
+    },
 };
 
 export default accountsHandlers;
