@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import accountsHandlers from './api/accoutns/accounts.handlers';
-import usersHandlers from './api/users/users.handlers';
+import accountsHandlers from './api/accoutns/account.handlers';
+import usersHandlers from './api/users/user.handlers';
 import Auth from './utils/Auth';
 
 const router = Router();

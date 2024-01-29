@@ -1,9 +1,9 @@
 import { NextFunction, Response } from 'express';
 import { IRequestUser, IRequestWithUser } from '../../interfaces/user';
 import CustomError from '../../utils/CustomError';
-import transactionModel from '../transactions/transactions.model';
-import userModel from '../users/users.model';
-import accountModel from './accounts.model';
+import transactionModel from '../transactions/transaction.model';
+import userModel from '../users/user.model';
+import accountModel from './account.model';
 
 const accountsHandlers = {
     deposit: async (
