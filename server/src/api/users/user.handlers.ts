@@ -359,7 +359,9 @@ const usersHandlers = {
             } else {
                 try {
                     const accessToken = Auth.createAccessToken({
+                        id: user.id,
                         email: user.email,
+                        name: user.name,
                     });
                     user.password = undefined;
                     user.deletedAt = undefined;
