@@ -17,7 +17,7 @@ let transactionModel: Model<ITransaction & Document>;
 try {
     const schema = new Schema<ITransaction>(
         {
-            userId: {
+            fromAccountId: {
                 type: String,
                 required: true,
             },
@@ -30,7 +30,7 @@ try {
                 required: true,
                 enum: ['deposit', 'withdraw', 'transfer'],
             },
-            toUserId: {
+            toAccountId: {
                 type: String,
             },
             deletedAt: {
