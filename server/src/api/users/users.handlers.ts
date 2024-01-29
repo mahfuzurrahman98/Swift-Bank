@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { NextFunction, Request, Response } from 'express';
+import { startSession } from 'mongoose';
+import { IAccount } from '../../interfaces/account';
 import { IUser } from '../../interfaces/user';
 import Auth from '../../utils/Auth';
 import CustomError from '../../utils/CustomError';
@@ -50,6 +52,10 @@ const usersHandlers = {
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
+        const session = await startSession();
+        // start transaction to make sure that every database operation is happening in a single transaction
+        // if any of them fails, the transaction will be aborted
+        session.startTransaction();
         try {
             // get data from request body
             const { name, email, password } = req.body;
@@ -57,41 +63,48 @@ const usersHandlers = {
             // validate data
             // name should be present and its a string and should not be empty
             if (!name || typeof name !== 'string' || name.trim() === '') {
-                return next(new CustomError(422, 'Name is required'));
+                throw new CustomError(422, 'Name is required');
             }
             // email should be present and its a string and should not be empty
             if (!email || typeof email !== 'string' || email.trim() === '') {
-                return next(new CustomError(422, 'Email is required'));
+                throw new CustomError(422, 'Email is required');
             }
             // password should be present and its a string and should not be empty
             if (!password || typeof password !== 'string') {
-                return next(new CustomError(422, 'Password is required'));
+                throw new CustomError(422, 'Password is required');
             }
 
             // check if user already exists
             const existingUser = await userModel.findOne({ email });
             if (existingUser) {
-                return next(
-                    new CustomError(409, 'The email address is already in use')
+                throw new CustomError(
+                    409,
+                    'The email address is already in use'
                 );
             }
 
-            // create new user
-            // hash password
+            // hash the password
             const hashedPassword = await Hash.make(password);
-            const user: IUser = await userModel.create({
+
+            // create user
+            const user: IUser = new userModel({
                 name,
                 email,
                 password: hashedPassword,
                 googleAuth: false,
                 active: true,
             });
+            await user.save({ session });
 
             // create account
-            const account = await accountModel.create({
+            const account: IAccount = new accountModel({
                 userId: user.id,
                 balance: 0,
             });
+            await account.save({ session });
+
+            // commit transaction
+            await session.commitTransaction();
 
             // remove password from response
             user.password = undefined;
@@ -102,9 +115,13 @@ const usersHandlers = {
                 data: { user, account },
             });
         } catch (error: any) {
+            await session.abortTransaction();
+            session.endSession();
             return next(
                 new CustomError(500, error.message || 'Something went wrong')
             );
+        } finally {
+            session.endSession();
         }
     },
 
