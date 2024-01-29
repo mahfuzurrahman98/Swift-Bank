@@ -2,7 +2,6 @@ import { NextFunction, Response } from 'express';
 import { IRequestUser, IRequestWithUser } from '../../interfaces/user';
 import CustomError from '../../utils/CustomError';
 import transactionModel from '../transactions/transaction.model';
-import userModel from '../users/user.model';
 import accountModel from './account.model';
 
 const accountsHandlers = {
@@ -112,36 +111,51 @@ const accountsHandlers = {
 
             const user: IRequestUser = req?.user;
             const userId = user.id;
+            const fromAccount = await accountModel.findOne({ userId });
 
-            const { toUserId, amount } = req.body;
-
-            if (
-                !toUserId ||
-                typeof toUserId !== 'string' ||
-                userId.trim().length === 0
-            ) {
-                return next(new CustomError(422, 'Invalid user id'));
+            if (!fromAccount) {
+                return next(new CustomError(404, 'Source account not found'));
             }
 
-            const toUser = await userModel.findOne({ _id: toUserId });
-            if (!toUser) {
-                return next(new CustomError(404, 'Invalid user id'));
+            const { toAccountId, amount } = req.body;
+
+            if (
+                !toAccountId ||
+                typeof toAccountId !== 'string' ||
+                toAccountId.trim().length === 0
+            ) {
+                return next(
+                    new CustomError(422, 'Invalid destination account id')
+                );
+            }
+
+            const toAccount = await accountModel.findOne({ _id: toAccountId });
+            if (!toAccount) {
+                return next(
+                    new CustomError(404, 'Destination account not found')
+                );
             }
 
             if (!amount || typeof amount !== 'number' || amount <= 0) {
                 return next(new CustomError(422, 'Invalid amount'));
             }
 
-            const fromAccount = await accountModel.findOne({ userId });
-            const toAccount = await accountModel.findOne({ userId: toUserId });
-
-            if (!fromAccount) {
-                return next(new CustomError(404, 'Source account not found'));
-            }
-
             if (!toAccount) {
                 return next(
                     new CustomError(404, 'Destination account not found')
+                );
+            }
+
+            // now check if toAccount is a beneficiary of fromAccount
+            if (
+                !fromAccount.beneficiaries ||
+                !fromAccount.beneficiaries.includes(toAccount._id)
+            ) {
+                return next(
+                    new CustomError(
+                        403,
+                        'Destination account is not a beneficiary'
+                    )
                 );
             }
 
@@ -156,8 +170,8 @@ const accountsHandlers = {
             await toAccount.save();
 
             const transaction = await transactionModel.create({
-                userId,
-                toUserId,
+                fromAccountId: fromAccount._id,
+                toAccountId,
                 amount,
                 type: 'transfer',
             });
