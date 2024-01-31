@@ -389,22 +389,40 @@ const accountsHandlers = {
                 return next(new CustomError(404, 'Account not found'));
             }
 
-            // find transactions from transations and join with account if there is toAccountId to find the beneficiary name
-            const transactions = await transactionModel
-                .find({
-                    $or: [
-                        { fromAccountId: account._id },
-                        { toAccountId: account._id },
-                    ],
-                })
+            // Find outgoing transactions for the user
+            const outgoingTransactions = await transactionModel
+                .find({ fromAccountId: account._id })
                 .populate({
-                    path: 'fromAccountId',
-                    select: 'name',
+                    path: 'toAccountId',
+                    select: 'userId',
                     populate: {
                         path: 'userId',
                         select: 'name',
+                        model: 'users',
                     },
                 });
+
+            // Find incoming transactions for the user
+            const incomingTransactions = await transactionModel
+                .find({ toAccountId: account._id })
+                .populate({
+                    path: 'fromAccountId',
+                    select: 'userId',
+                    populate: {
+                        path: 'userId',
+                        select: 'name',
+                        model: 'users',
+                    },
+                });
+
+            // Combine both incoming and outgoing transactions
+            const transactions =
+                outgoingTransactions.concat(incomingTransactions);
+
+            // Optionally, you might want to sort the transactions by date or another criterion
+            transactions.sort((a, b) => {
+                return a.createdAt.getTime() - b.createdAt.getTime();
+            });
 
             return res.status(200).json({
                 success: true,
