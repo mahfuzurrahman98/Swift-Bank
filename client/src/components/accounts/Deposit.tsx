@@ -1,40 +1,51 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const Deposit = ({ deposit }: { deposit: (amount: number) => void }) => {
     const [amount, setAmount] = useState('');
-    const [error, setError] = useState<string>('');
+    const [btnLoading, setBtnLoading] = useState(false);
 
     const handleDeposit = async () => {
         try {
-            setError('');
+            setBtnLoading(true);
             await deposit(Number(amount));
+            toast.success('Deposit successful');
             setAmount('');
         } catch (error: any) {
-            console.log(error.response.data.message);
-            setError(error.response.data.message as string);
-            setTimeout(() => setError(''), 3000);
+            toast.error(error.response.data.message);
+        } finally {
+            setTimeout(() => {
+                setBtnLoading(false);
+            }, 3000);
         }
     };
 
     return (
-        <div className="p-4 bg-white shadow-md rounded-md">
+        <div className="">
             <h3 className="text-lg font-semibold mb-1">Deposit</h3>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center justify-between">
                 <input
                     className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
                     type="number"
                     placeholder="Enter amount"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
+                    disabled={btnLoading}
                 />
-                <button
-                    className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-600"
-                    onClick={handleDeposit}
-                >
-                    Deposit
-                </button>
+                {btnLoading ? (
+                    <button className="flex items-center gap-x-1 bg-gray-500 px-3 py-1 rounded cursor-not-allowed">
+                        <div className="w-5 h-5 border-2 border-dashed rounded-full animate-spin border-white"></div>
+                        <span className="text-white">Loading...</span>
+                    </button>
+                ) : (
+                    <button
+                        className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+                        onClick={handleDeposit}
+                    >
+                        Deposit
+                    </button>
+                )}
             </div>
-            {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
         </div>
     );
 };
