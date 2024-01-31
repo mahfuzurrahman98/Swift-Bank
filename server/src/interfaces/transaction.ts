@@ -8,6 +8,7 @@ export interface ITransaction extends Document {
     type: 'deposit' | 'withdraw' | 'transfer';
     balance: number;
     toAccountId?: string;
+    toAccountBalance?: number;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date | null;

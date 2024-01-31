@@ -19,7 +19,7 @@ try {
         {
             fromAccountId: {
                 type: String,
-                required: true,
+                ref: 'accounts',
             },
             amount: {
                 type: Number,
@@ -36,6 +36,10 @@ try {
             },
             toAccountId: {
                 type: String,
+                ref: 'accounts',
+            },
+            toAccountBalance: {
+                type: Number,
             },
             deletedAt: {
                 type: Date,
