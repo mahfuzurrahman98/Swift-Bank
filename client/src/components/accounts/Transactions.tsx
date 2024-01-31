@@ -45,28 +45,21 @@ const Transactions = ({
 
                     <tbody>
                         {transactions.map((transaction) => (
-                            <tr key={transaction.id}>
-                                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-left text-gray-700">
-                                    <td>
-                                        {
-                                            // make the date human readable
-                                            formatMongoDate(
-                                                transaction.createdAt
-                                            )
-                                        }
-                                    </td>
-                                </th>
+                            <tr key={transaction._id}>
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-left text-gray-700">
+                                    {formatMongoDate(transaction.createdAt)}
+                                </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 ">
-                                    <td>{transaction.type}</td>
+                                    {transaction.type}
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    <td>{transaction.amount}</td>
+                                    {transaction.amount}
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    <td>{transaction.balance}</td>
+                                    {transaction.balance}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    <td>{transaction.toAccountId}</td>
+                                    {transaction.toAccountId}
                                 </td>
                             </tr>
                         ))}
