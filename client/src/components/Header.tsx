@@ -12,7 +12,7 @@ const Header = () => {
         <div className="flex items-center">
           <Link
             to="/"
-            className="text-2xl font-bold text-amber-800 leading-none"
+            className="text-2xl font-bold text-blue-800 leading-none"
           >
             Swift Bank
           </Link>
@@ -34,7 +34,7 @@ const Header = () => {
             <div className="flex items-center">
               <Link
                 to="/login"
-                className="bg-amber-800 text-white px-3 py-1 rounded-md hover:bg-amber-700"
+                className="bg-blue-800 text-white px-3 py-1 rounded-md hover:bg-blue-700"
               >
                 Login
               </Link>

@@ -7,7 +7,7 @@ const MessageDiv = () => {
             <h1 className="text-2xl font-bold">Welcome,</h1>
             <p className="text-lg">
                 You are not logged in. Please{' '}
-                <span className="text-amber-800 underline">
+                <span className="text-blue-800 underline">
                     <Link to="/login">login</Link>
                 </span>{' '}
                 to proceed.
