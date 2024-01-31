@@ -128,7 +128,10 @@ const Dashboard = () => {
                                 <Link to="/transfer">Fund Transfer</Link>
                             </div>
                         </div>
-                        <Transactions transactions={transactions} />
+                        <Transactions
+                            transactions={transactions}
+                            accountId={account._id}
+                        />
                     </RootLayout>
                 </>
             }
