@@ -33,7 +33,7 @@ export type AccountType = {
 };
 
 export type TransactionType = {
-    id: string;
+    _id: string;
     fromAccountId: string;
     amount: number;
     type: 'deposit' | 'withdraw' | 'transfer';
