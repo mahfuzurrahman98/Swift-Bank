@@ -22,12 +22,13 @@ const Transactions = ({
     };
 
     const formatBalance = (
-        fromAccountId: string,
-        toAccountId: string,
+        fromAccountId: any,
+        toAccountId: any,
         fromAccountBalance: number,
-        toAccountBalance: number,
+        toAccountBalance: number | undefined,
         transactionType: string
     ): string => {
+        toAccountId = toAccountId || '';
         if (transactionType == 'transfer') {
             if (fromAccountId == accountId) {
                 return fromAccountBalance.toLocaleString('en-US', {
@@ -35,7 +36,10 @@ const Transactions = ({
                     currency: 'BDT',
                 });
             } else {
-                return toAccountBalance.toLocaleString('en-US', {
+                if (!toAccountBalance) {
+                    return 'N/A';
+                }
+                return toAccountBalance?.toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'BDT',
                 });
@@ -94,7 +98,7 @@ const Transactions = ({
                                     )}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    {transaction?.toAccountId?.userId?.name}
+                                    {''}
                                 </td>
                             </tr>
                         ))}
