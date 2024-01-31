@@ -5,11 +5,11 @@ const useLogout = () => {
     const { setAuth } = useAuth();
 
     const logout = async () => {
-        setAuth({
-            token: '',
-        });
         try {
             await axiosPrivate.post('/users/logout');
+            setAuth({
+                token: '',
+            });
         } catch (err) {
             console.error(err);
         }
