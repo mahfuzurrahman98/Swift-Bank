@@ -23,6 +23,7 @@ export type statusType = {
 };
 
 export type AccountType = {
+    _id: string;
     userId: string;
     balance: number;
     active: boolean;
@@ -34,11 +35,12 @@ export type AccountType = {
 
 export type TransactionType = {
     _id: string;
-    fromAccountId: string;
+    fromAccountId: object;
     amount: number;
     type: 'deposit' | 'withdraw' | 'transfer';
     balance: number;
-    toAccountId?: string;
+    toAccountId?: object;
+    toAccountBalance?: number;
     createdAt: string;
     updatedAt: string;
     deletedAt?: string | null;
