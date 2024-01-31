@@ -389,9 +389,22 @@ const accountsHandlers = {
                 return next(new CustomError(404, 'Account not found'));
             }
 
-            const transactions: ITransaction[] = await transactionModel.find({
-                fromAccountId: account._id,
-            });
+            // find transactions from transations and join with account if there is toAccountId to find the beneficiary name
+            const transactions = await transactionModel
+                .find({
+                    $or: [
+                        { fromAccountId: account._id },
+                        { toAccountId: account._id },
+                    ],
+                })
+                .populate({
+                    path: 'fromAccountId',
+                    select: 'name',
+                    populate: {
+                        path: 'userId',
+                        select: 'name',
+                    },
+                });
 
             return res.status(200).json({
                 success: true,

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import GoogleIcon from '../assets/google.svg';
 import ComponentLoader from '../components/ComponentLoader';
 import useAuth from '../hooks/useAuth';
 import useLogin from '../hooks/useLogin';
@@ -137,7 +136,7 @@ const Login = () => {
                                         id="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="mt-1 px-3 py-2 w-full border rounded-md focus:outline-amber-700"
+                                        className="mt-1 px-3 py-2 w-full border rounded-md focus:outline-blue-700"
                                         placeholder="Enter your email"
                                         autoComplete="email"
                                         required
@@ -156,7 +155,7 @@ const Login = () => {
                                         id="password"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="mt-1 px-3 py-2 w-full border rounded-md focus:outline-amber-700"
+                                        className="mt-1 px-3 py-2 w-full border rounded-md focus:outline-blue-700"
                                         placeholder="Enter your password"
                                         autoComplete="current-password"
                                         required
@@ -164,7 +163,7 @@ const Login = () => {
                                 </div>
                                 <button
                                     type="submit"
-                                    className={`w-full bg-amber-800 text-white px-3 py-2 rounded-md text-md hover:bg-amber-700 focus:outline-none focus:shadow-outline-amber active:bg-amber-800 ${
+                                    className={`w-full bg-blue-800 text-white px-3 py-2 rounded-md text-md hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800 ${
                                         loading
                                             ? 'opacity-50 cursor-not-allowed'
                                             : ''
@@ -175,7 +174,7 @@ const Login = () => {
                                 </button>
                             </form>
 
-                            <div className="text-center mt-5">
+                            {/* <div className="text-center mt-5">
                                 <div className="flex items-center px-4 sm:px-12">
                                     <hr className="border-t border-black flex-grow mr-3" />
                                     <p className="text-gray-500 text-md font-sm">
@@ -196,7 +195,7 @@ const Login = () => {
                                         <span className="ml-2">Google</span>
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </RootLayout>

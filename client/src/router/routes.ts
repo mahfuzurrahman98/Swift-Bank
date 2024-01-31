@@ -12,7 +12,7 @@ const routes: RouteType[] = [
     //     element: GoogleLoginCallback,
     //     _protected: 0,
     // },
-    { path: '/', element: Dashboard, _protected: -1 },
+    { path: '/', element: Dashboard, _protected: 1 },
     { path: '/beneficiaries', element: Beneficiaries, _protected: -1 },
 ];
 
