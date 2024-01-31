@@ -67,19 +67,19 @@ const Dashboard = () => {
         }
     };
 
-    const transfer = async (amount: number, to: string) => {
-        try {
-            const response = await axiosPrivate.post('/accounts/transfer', {
-                amount,
-                to,
-            });
-            setAccount(response.data.data.account);
-        } catch (error: any) {
-            throw error;
-        } finally {
-            await getTransactions();
-        }
-    };
+    // const transfer = async (amount: number, to: string) => {
+    //     try {
+    //         const response = await axiosPrivate.post('/accounts/transfer', {
+    //             amount,
+    //             to,
+    //         });
+    //         setAccount(response.data.data.account);
+    //     } catch (error: any) {
+    //         throw error;
+    //     } finally {
+    //         await getTransactions();
+    //     }
+    // };
 
     useEffect(() => {
         console.log('token:', auth.token);
