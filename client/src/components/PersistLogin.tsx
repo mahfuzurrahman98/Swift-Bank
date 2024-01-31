@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 import { Outlet } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import useRefreshToken from '../hooks/useRefreshToken';
@@ -32,8 +31,11 @@ const PersistLogin = () => {
 
     return (
         <>
-            <Toaster
-                position="bottom-right"
+        {
+            // if current route is '/' then position is 'top-right' else 'bottom-right'
+        }
+            {/* <Toaster
+                position={auth.token == '' ? 'top-right' : 'bottom-right'}
                 toastOptions={{
                     className: '',
                     duration: 5000,
@@ -45,7 +47,7 @@ const PersistLogin = () => {
                         duration: 3000,
                     },
                 }}
-            />
+            /> */}
             {isLoading ? <Loading /> : <Outlet />}
         </>
     );
