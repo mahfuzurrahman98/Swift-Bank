@@ -1,8 +1,10 @@
 import { axiosPrivate } from '../api/axios';
 import useAuth from './useAuth';
+import useLogout from './useLogout';
 
 const useRefreshToken = () => {
     const { setAuth } = useAuth();
+    const logout = useLogout();
 
     const refresh = async () => {
         try {
@@ -16,6 +18,7 @@ const useRefreshToken = () => {
 
             return data.accessToken;
         } catch (error) {
+            logout();
             console.log('error from useRefreshToken.tsx', error);
             throw error;
         }
