@@ -5,7 +5,7 @@ import { errorType } from '../types';
 const Error = ({ code }: { code: number }) => {
   const error = errors.filter((err: errorType) => err.code === code)[0];
   return (
-    <div className="flex items-center justify-center min-h-screen bg-amber-700 text-white">
+    <div className="flex items-center justify-center min-h-screen bg-blue-700 text-white">
       <div className="rounded flex flex-col justify-center text-center">
         <h2 className="text-3xl font-semibold mb-4">
           {error.code} | {error.message}
