@@ -2,8 +2,10 @@ import { TransactionType } from '../../types';
 
 const Transactions = ({
     transactions,
+    accountId,
 }: {
     transactions: TransactionType[];
+    accountId: string;
 }) => {
     const formatMongoDate = (mongoDate: string): string => {
         const date = new Date(mongoDate);
@@ -17,6 +19,33 @@ const Transactions = ({
             timeZoneName: 'short',
         };
         return date.toLocaleDateString('en-US', options);
+    };
+
+    const formatBalance = (
+        fromAccountId: string,
+        toAccountId: string,
+        fromAccountBalance: number,
+        toAccountBalance: number,
+        transactionType: string
+    ): string => {
+        if (transactionType == 'transfer') {
+            if (fromAccountId == accountId) {
+                return fromAccountBalance.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'BDT',
+                });
+            } else {
+                return toAccountBalance.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'BDT',
+                });
+            }
+        } else {
+            return fromAccountBalance.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'BDT',
+            });
+        }
     };
 
     return (
@@ -56,10 +85,16 @@ const Transactions = ({
                                     {transaction.amount}
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    {transaction.balance}
+                                    {formatBalance(
+                                        transaction.fromAccountId, // fromAccountId
+                                        transaction.toAccountId,
+                                        transaction.balance, // fromAccountBalance
+                                        transaction.toAccountBalance,
+                                        transaction.type
+                                    )}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    {transaction.toAccountId}
+                                    {transaction?.toAccountId?.userId?.name}
                                 </td>
                             </tr>
                         ))}
