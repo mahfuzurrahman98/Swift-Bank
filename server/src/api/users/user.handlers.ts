@@ -367,6 +367,17 @@ const usersHandlers = {
                     user.deletedAt = undefined;
                     user.__v = undefined;
 
+                    const token = Auth.createRefreshToken({
+                        id: user.id,
+                        email: user.email,
+                        name: user.name,
+                    });
+                    res.cookie('refreshToken', token, {
+                        httpOnly: true,
+                        secure: false,
+                        sameSite: 'strict',
+                        path: '/',
+                    });
                     return res.status(200).json({
                         message: 'Authentication successful',
                         data: { user, accessToken },
@@ -392,8 +403,14 @@ const usersHandlers = {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            res.clearCookie('refreshToken');
-            return res.status(204);
+            console.log('logout');
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                sameSite: 'strict',
+                secure: false,
+                path: '/',
+            });
+            return res.status(204).send('Logout successful');
         } catch (error: any) {
             return next(new CustomError(500, error.message));
         }
