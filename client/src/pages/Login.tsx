@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import ComponentLoader from '../components/ComponentLoader';
 import useAuth from '../hooks/useAuth';
-import useLogin from '../hooks/useLogin';
 import { statusType } from '../types';
 import RootLayout from './RootLayout';
 
@@ -20,7 +19,6 @@ const Login = () => {
     });
     const [error, setError] = useState<string>('');
     const { setAuth } = useAuth();
-    const login = useLogin();
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,20 +86,6 @@ const Login = () => {
             status={status}
             component={
                 <RootLayout>
-                    <Toaster
-                        position="bottom-right"
-                        toastOptions={{
-                            className: '',
-                            duration: 5000,
-                            style: {
-                                background: '#363636',
-                                color: '#fff',
-                            },
-                            success: {
-                                duration: 3000,
-                            },
-                        }}
-                    />
                     <div className="flex items-center justify-center mt-8 lg:mt-24">
                         <div className="bg-white p-6 md:px-8 rounded shadow-md w-96">
                             <h1 className="text-2xl font-semibold mb-6">

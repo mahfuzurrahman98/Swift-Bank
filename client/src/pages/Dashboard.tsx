@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import ComponentLoader from '../components/ComponentLoader';
 import Deposit from '../components/accounts/Deposit';
 import Transactions from '../components/accounts/Transactions';
@@ -93,25 +95,42 @@ const Dashboard = () => {
         <ComponentLoader
             status={status}
             component={
-                <RootLayout>
-                    <div className="mb-4">
-                        Your account balance is:{' '}
-                        <span className="font-semibold">{account.balance}</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 mb-4">
-                        <div className="w-full">
-                            <Deposit deposit={deposit} />
+                <>
+                    <Toaster
+                        position="top-center"
+                        toastOptions={{
+                            className: '',
+                            duration: 5000,
+                            style: {
+                                background: '#363636',
+                                color: '#fff',
+                            },
+                            success: {
+                                duration: 3000,
+                            },
+                        }}
+                    />
+                    <RootLayout>
+                        <div className="mb-4">
+                            Your account balance is:{' '}
+                            <span className="font-semibold">
+                                {account.balance}
+                            </span>
                         </div>
-                        <div className="w-full">
-                            <Withdraw withdraw={withdraw} />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-2 mb-4">
+                            <div className="w-full">
+                                <Deposit deposit={deposit} />
+                            </div>
+                            <div className="w-full">
+                                <Withdraw withdraw={withdraw} />
+                            </div>
+                            <div className="w-full  mb-4">
+                                <Link to="/transfer">Fund Transfer</Link>
+                            </div>
                         </div>
-                        <p>asdfsadf</p>
-                        {/* <div className="w-full md:w-1/3 px-4 mb-4">
-                                <Transfer onTransfer={transfer} />
-                            </div> */}
-                    </div>
-                    <Transactions transactions={transactions} />
-                </RootLayout>
+                        <Transactions transactions={transactions} />
+                    </RootLayout>
+                </>
             }
         />
     );
