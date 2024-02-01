@@ -31,7 +31,7 @@ const FundTransfer = ({
         try {
             setBtnLoading(true);
             await fundTransfer(Number(fund.amount), fund.toAccountId);
-            toast.success('FundTransfer successful');
+            toast.success('Fund Transfer successful');
             setFund({ amount: '', toAccountId: '' });
         } catch (error: any) {
             toast.error(error.response.data.message);
