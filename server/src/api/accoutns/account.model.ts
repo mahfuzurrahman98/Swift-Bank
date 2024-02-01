@@ -34,7 +34,7 @@ try {
             beneficiaries: [
                 {
                     type: Schema.Types.ObjectId,
-                    ref: 'users',
+                    ref: 'accounts',
                 },
             ],
             deletedAt: {
