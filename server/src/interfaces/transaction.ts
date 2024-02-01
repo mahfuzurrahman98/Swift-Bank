@@ -6,7 +6,7 @@ export interface IFundTransferTransaction extends Document {
     fromAccountId: string;
     toAccountId: string;
     amount: number;
-    fromAccountBlance: number;
+    fromAccountBalance: number;
     toAccountBalance: number;
     createdAt: Date;
     updatedAt: Date;

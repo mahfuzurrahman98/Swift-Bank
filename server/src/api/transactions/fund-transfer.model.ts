@@ -29,7 +29,7 @@ try {
                 type: Number,
                 required: true,
             },
-            fromAccountBlance: {
+            fromAccountBalance: {
                 type: Number,
                 required: true,
             },
