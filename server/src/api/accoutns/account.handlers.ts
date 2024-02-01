@@ -214,6 +214,12 @@ const accountsHandlers = {
             fromAccount.balance -= amount;
             toAccount.balance += amount;
 
+            // if account is not active, then active it
+            // this will happen when the first deposit
+            if (!toAccount.active) {
+                toAccount.active = true;
+            }
+
             await fromAccount.save();
             await toAccount.save();
 
