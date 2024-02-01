@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { Link } from 'react-router-dom';
 import ComponentLoader from '../components/ComponentLoader';
 import Deposit from '../components/accounts/Deposit';
+import FundTransfer from '../components/accounts/FundTransfer';
 import Transactions from '../components/accounts/Transactions';
 import Withdraw from '../components/accounts/Withdraw';
 import useAuth from '../hooks/useAuth';
@@ -42,53 +42,56 @@ const Dashboard = () => {
 
     const deposit = async (amount: number) => {
         try {
-            const response = await axiosPrivate.post('/accounts/deposit', {
+            await axiosPrivate.post('/accounts/deposit', {
                 amount,
             });
-            setAccount(response.data.data.account);
-            console.log(response.data);
         } catch (error: any) {
             throw error;
         } finally {
+            await getAccount();
             await getTransactions();
         }
     };
 
     const withdraw = async (amount: number) => {
         try {
-            const response = await axiosPrivate.post('/accounts/withdraw', {
+            await axiosPrivate.post('/accounts/withdraw', {
                 amount,
             });
-            setAccount(response.data.data.account);
         } catch (error: any) {
             throw error;
         } finally {
+            await getAccount();
             await getTransactions();
         }
     };
 
-    // const transfer = async (amount: number, to: string) => {
-    //     try {
-    //         const response = await axiosPrivate.post('/accounts/transfer', {
-    //             amount,
-    //             to,
-    //         });
-    //         setAccount(response.data.data.account);
-    //     } catch (error: any) {
-    //         throw error;
-    //     } finally {
-    //         await getTransactions();
-    //     }
-    // };
+    const transfer = async (amount: number, toAccountId: string) => {
+        try {
+            await axiosPrivate.post('/accounts/transfer', {
+                amount,
+                toAccountId,
+            });
+        } catch (error: any) {
+            throw error;
+        } finally {
+            await getAccount();
+            await getTransactions();
+        }
+    };
 
     useEffect(() => {
         console.log('token:', auth.token);
         (async () => {
-            await getAccount();
-            await getTransactions();
-            setStatus({ loading: false, error: null });
+            try {
+                await getAccount();
+                await getTransactions();
+            } catch (error: any) {
+                console.log(error);
+            } finally {
+                setStatus({ loading: false, error: null });
+            }
         })();
-        setStatus({ loading: false, error: null });
     }, [auth.token]);
 
     return (
@@ -117,15 +120,20 @@ const Dashboard = () => {
                                 {account.balance}
                             </span>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-2 mb-4">
-                            <div className="w-full">
-                                <Deposit deposit={deposit} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4 mb-4">
+                            <div className="flex flex-col gap-y-5 p-4 rounded-md border-gray-300 border-2">
+                                <div className="w-full">
+                                    <Deposit deposit={deposit} />
+                                </div>
+                                <div className="w-full">
+                                    <Withdraw withdraw={withdraw} />
+                                </div>
                             </div>
-                            <div className="w-full">
-                                <Withdraw withdraw={withdraw} />
-                            </div>
-                            <div className="w-full  mb-4">
-                                <Link to="/transfer">Fund Transfer</Link>
+                            <div className="w-full p-4 rounded-md border-gray-300 border-2">
+                                <FundTransfer
+                                    fundTransfer={transfer}
+                                    beneficiaries={account.beneficiaries}
+                                />
                             </div>
                         </div>
                         <Transactions transactions={transactions} />
