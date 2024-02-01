@@ -2,10 +2,8 @@ import { TransactionType } from '../../types';
 
 const Transactions = ({
     transactions,
-    accountId,
 }: {
     transactions: TransactionType[];
-    accountId: string;
 }) => {
     const formatMongoDate = (mongoDate: string): string => {
         const date = new Date(mongoDate);
@@ -21,35 +19,53 @@ const Transactions = ({
         return date.toLocaleDateString('en-US', options);
     };
 
-    const formatBalance = (
-        fromAccountId: any,
-        toAccountId: any,
-        fromAccountBalance: number,
-        toAccountBalance: number | undefined,
-        transactionType: string
-    ): string => {
-        toAccountId = toAccountId || '';
-        if (transactionType == 'transfer') {
-            if (fromAccountId == accountId) {
-                return fromAccountBalance.toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'BDT',
-                });
-            } else {
-                if (!toAccountBalance) {
-                    return 'N/A';
-                }
-                return toAccountBalance?.toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'BDT',
-                });
+    const formatAmount = (amount: number): string => {
+        // format with commas
+        return amount.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'BDT',
+        });
+    };
+
+    const TransactionBadge: React.FC<{ type: string }> = ({ type }) => {
+        const getBadgeColorForTransactionType = (
+            transactionType: string
+        ): { backgroundColor: string; textColor: string } => {
+            if (
+                transactionType === 'deposit' ||
+                transactionType === 'transfered in'
+            ) {
+                return {
+                    backgroundColor: 'bg-green-100',
+                    textColor: 'text-green-800',
+                };
             }
-        } else {
-            return fromAccountBalance.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'BDT',
-            });
-        }
+
+            if (
+                transactionType === 'withdraw' ||
+                transactionType === 'transfered out'
+            ) {
+                return {
+                    backgroundColor: 'bg-red-100',
+                    textColor: 'text-red-800',
+                };
+            }
+
+            return {
+                backgroundColor: 'bg-gray-100',
+                textColor: 'text-gray-800',
+            };
+        };
+
+        const badgeColor = getBadgeColorForTransactionType(type);
+
+        return (
+            <span
+                className={`inline-block rounded-full px-2 py- ${badgeColor.backgroundColor} ${badgeColor.textColor}`}
+            >
+                {type}
+            </span>
+        );
     };
 
     return (
@@ -71,7 +87,7 @@ const Transactions = ({
                                 Balance
                             </th>
                             <th className="px-6 bg-gray-50 text-black align-middle border border-solid border-gray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                                To
+                                Particular
                             </th>
                         </tr>
                     </thead>
@@ -82,23 +98,17 @@ const Transactions = ({
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 text-left text-gray-700">
                                     {formatMongoDate(transaction.createdAt)}
                                 </td>
-                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4 ">
-                                    {transaction.type}
+                                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
+                                    <TransactionBadge type={transaction.type} />
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    {transaction.amount}
+                                    {formatAmount(transaction.amount)}
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    {formatBalance(
-                                        transaction.fromAccountId, // fromAccountId
-                                        transaction.toAccountId,
-                                        transaction.balance, // fromAccountBalance
-                                        transaction.toAccountBalance,
-                                        transaction.type
-                                    )}
+                                    {formatAmount(transaction.balance)}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4">
-                                    {''}
+                                    {transaction.particular}
                                 </td>
                             </tr>
                         ))}

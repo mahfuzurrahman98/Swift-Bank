@@ -35,13 +35,9 @@ export type AccountType = {
 
 export type TransactionType = {
     _id: string;
-    fromAccountId: object;
+    type: 'deposit' | 'withdraw' | 'transfered in' | 'transfered out';
     amount: number;
-    type: 'deposit' | 'withdraw' | 'transfer';
     balance: number;
-    toAccountId?: object;
-    toAccountBalance?: number;
+    particular: string;
     createdAt: string;
-    updatedAt: string;
-    deletedAt?: string | null;
 };
