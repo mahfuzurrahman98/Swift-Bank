@@ -2,13 +2,23 @@ import { Document } from 'mongoose';
 
 // type[deposit|withdraw|transfer]
 // toUserId: only for transfer
-export interface ITransaction extends Document {
+export interface IFundTransferTransaction extends Document {
     fromAccountId: string;
+    toAccountId: string;
     amount: number;
-    type: 'deposit' | 'withdraw' | 'transfer';
+    fromAccountBlance: number;
+    toAccountBalance: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt?: Date | null;
+}
+
+
+export interface ISelfTransaction extends Document {
+    accountId: string;
+    amount: number;
+    type: 'deposit' | 'withdraw';
     balance: number;
-    toAccountId?: string;
-    toAccountBalance?: number;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date | null;

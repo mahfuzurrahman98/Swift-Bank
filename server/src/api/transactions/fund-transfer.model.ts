@@ -1,6 +1,6 @@
 import { Document, Model, Mongoose, Schema } from 'mongoose';
 import Database from '../../configs/Database';
-import { ITransaction } from '../../interfaces/transaction';
+import { IFundTransferTransaction } from '../../interfaces/transaction';
 import CustomError from '../../utils/CustomError';
 
 let db: Mongoose;
@@ -11,13 +11,17 @@ try {
     throw new CustomError(500, error.message);
 }
 
-const collectionName = 'transactions';
-let transactionModel: Model<ITransaction & Document>;
+const collectionName = 'fund_transfers';
+let fundTransferTransactionModel: Model<IFundTransferTransaction & Document>;
 
 try {
-    const schema = new Schema<ITransaction>(
+    const schema = new Schema<IFundTransferTransaction>(
         {
             fromAccountId: {
+                type: String,
+                ref: 'accounts',
+            },
+            toAccountId: {
                 type: String,
                 ref: 'accounts',
             },
@@ -25,18 +29,9 @@ try {
                 type: Number,
                 required: true,
             },
-            type: {
-                type: String,
-                required: true,
-                enum: ['deposit', 'withdraw', 'transfer'],
-            },
-            balance: {
+            fromAccountBlance: {
                 type: Number,
                 required: true,
-            },
-            toAccountId: {
-                type: String,
-                ref: 'accounts',
             },
             toAccountBalance: {
                 type: Number,
@@ -49,11 +44,11 @@ try {
         { timestamps: true }
     );
 
-    transactionModel =
+    fundTransferTransactionModel =
         db.models[collectionName] ||
-        db.model<ITransaction & Document>(collectionName, schema);
+        db.model<IFundTransferTransaction & Document>(collectionName, schema);
 } catch (error: any) {
     throw new CustomError(500, error.message);
 }
 
-export default transactionModel;
+export default fundTransferTransactionModel;
