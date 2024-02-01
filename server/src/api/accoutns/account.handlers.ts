@@ -1,9 +1,17 @@
 import { NextFunction, Response } from 'express';
-import { ITransaction } from '../../interfaces/transaction';
+import {
+    IFundTransferTransaction,
+    ISelfTransaction,
+} from '../../interfaces/transaction';
 import { IRequestUser, IRequestWithUser } from '../../interfaces/user';
 import CustomError from '../../utils/CustomError';
-import transactionModel from '../transactions/transaction.model';
+import fundTransferTransactionModel from '../transactions/fund-transfer.model';
+import selfTransactionModel from '../transactions/self-transaction.model';
 import accountModel from './account.model';
+
+// interface ITransactionModified extends ITransaction {
+//     toAccount?: object;
+// }
 
 const accountsHandlers = {
     getAccount: async (
@@ -68,12 +76,13 @@ const accountsHandlers = {
             }
             await account.save();
 
-            const transaction: ITransaction = await transactionModel.create({
-                fromAccountId: account._id,
-                amount,
-                type: 'deposit',
-                balance: account.balance,
-            });
+            const transaction: ISelfTransaction =
+                await selfTransactionModel.create({
+                    accountId: account._id,
+                    amount,
+                    type: 'deposit',
+                    balance: account.balance,
+                });
 
             return res.status(200).json({
                 success: true,
@@ -118,12 +127,13 @@ const accountsHandlers = {
             account.balance -= amount;
             await account.save();
 
-            const transaction: ITransaction = await transactionModel.create({
-                fromAccountId: account._id,
-                amount,
-                type: 'withdraw',
-                balance: account.balance,
-            });
+            const transaction: ISelfTransaction =
+                await selfTransactionModel.create({
+                    accountId: account._id,
+                    amount,
+                    type: 'withdraw',
+                    balance: account.balance,
+                });
 
             return res.status(200).json({
                 success: true,
@@ -207,13 +217,14 @@ const accountsHandlers = {
             await fromAccount.save();
             await toAccount.save();
 
-            const transaction: ITransaction = await transactionModel.create({
-                fromAccountId: fromAccount._id,
-                toAccountId,
-                amount,
-                type: 'transfer',
-                balance: fromAccount.balance,
-            });
+            const transaction: IFundTransferTransaction =
+                await fundTransferTransactionModel.create({
+                    fromAccountId: fromAccount._id,
+                    toAccountId,
+                    amount,
+                    fromAccountBlance: fromAccount.balance,
+                    toAccountBalance: toAccount.balance,
+                });
 
             return res.status(200).json({
                 success: true,
@@ -389,45 +400,143 @@ const accountsHandlers = {
                 return next(new CustomError(404, 'Account not found'));
             }
 
-            // Find outgoing transactions for the user
-            const outgoingTransactions = await transactionModel
-                .find({ fromAccountId: account._id })
-                .populate({
-                    path: 'toAccountId',
-                    select: 'userId',
-                    populate: {
-                        path: 'userId',
-                        select: 'name',
-                        model: 'users',
-                    },
+            // Find self transactions, means the transaction made by the current user
+            // either incoming or outgoing
+            // incoming = deposit
+            // outgoing = withdrawal
+
+            const selfTransactions: ISelfTransaction[] =
+                await selfTransactionModel.find({ accountId: account._id });
+
+            // Now find beneficiary transactions
+            // either incoming or outgoing
+            // incoming = fund transfered to current user account
+            // outgoing = fund transfered from current user account
+
+            // const beneficiaryTransactions: IFundTransferTransaction[] =
+            //     await fundTransferTransactionModel.find({
+            //         $or: [
+            //             { fromAccountId: account._id },
+            //             { toAccountId: account._id },
+            //         ],
+            //     });
+
+            const beneficiaryTransactions: IFundTransferTransaction[] =
+                await fundTransferTransactionModel
+                    .find({
+                        $or: [
+                            { fromAccountId: account._id },
+                            { toAccountId: account._id },
+                        ],
+                    })
+                    .populate({
+                        path: 'fromAccountId',
+                        model: 'accounts',
+                        populate: {
+                            path: 'userId',
+                            model: 'users',
+                            select: 'name',
+                        },
+                    })
+                    .populate({
+                        path: 'toAccountId',
+                        model: 'accounts',
+                        populate: {
+                            path: 'userId',
+                            model: 'users',
+                            select: 'name',
+                        },
+                    });
+
+            // Transform the result to include separate fromAccount and toAccount objects
+            const transformedBeneficiaryTransactions =
+                beneficiaryTransactions.map((transaction) => {
+                    const transformedTransaction: any = {
+                        ...transaction.toObject(),
+                    };
+
+                    // after populating through accounts
+                    // model we are getting fromAccountId and toAccountId as objects
+                    // but they are basically string/objectIds
+                    // so we need to assign them to fromAccount and toAccount
+
+                    // assign fromAccount and toAccount objects
+                    transformedTransaction.fromAccount =
+                        transformedTransaction.fromAccountId;
+                    transformedTransaction.toAccount =
+                        transformedTransaction.toAccountId;
+
+                    // get back fromAccountId and toAccountId as string again
+                    transformedTransaction.fromAccountId =
+                        transformedTransaction.fromAccount?._id;
+                    transformedTransaction.toAccountId =
+                        transformedTransaction.toAccount?._id;
+
+                    // Again we only need fromAccountName and toAccountName
+                    transformedTransaction.fromAccountName =
+                        transformedTransaction.fromAccount?.userId?.name;
+                    transformedTransaction.toAccountName =
+                        transformedTransaction.toAccount?.userId?.name;
+
+                    transformedTransaction.curAccId = account._id;
+
+                    // transfer type
+                    // if fromAccount is same as current user
+                    // then it means current user is sending money, its outgoing
+                    // if toAccount is same as current user
+                    // then it means current user is receiving money, its incoming
+                    transformedTransaction.type =
+                        transformedTransaction.fromAccountId ==
+                        account._id.toString()
+                            ? 'transfered out'
+                            : 'transfered in';
+
+                    // Set balance and particular based on the transfer type
+                    if (transformedTransaction.type === 'transfered out') {
+                        transformedTransaction.balance =
+                            transformedTransaction.fromAccountBalance;
+                        transformedTransaction.particular = `Sent to ${transformedTransaction.toAccountName}`;
+                    } else {
+                        transformedTransaction.balance =
+                            transformedTransaction.toAccountBalance;
+                        transformedTransaction.particular = `Received from ${transformedTransaction.fromAccountName}`;
+                    }
+
+                    // now get rid of fromAccount and toAccount objects
+                    delete transformedTransaction.fromAccount;
+                    delete transformedTransaction.toAccount;
+
+                    return transformedTransaction;
                 });
 
-            // Find incoming transactions for the user
-            const incomingTransactions = await transactionModel
-                .find({ toAccountId: account._id })
-                .populate({
-                    path: 'fromAccountId',
-                    select: 'userId',
-                    populate: {
-                        path: 'userId',
-                        select: 'name',
-                        model: 'users',
-                    },
-                });
-
-            // Combine both incoming and outgoing transactions
-            const transactions =
-                outgoingTransactions.concat(incomingTransactions);
-
-            // Optionally, you might want to sort the transactions by date or another criterion
-            transactions.sort((a, b) => {
-                return a.createdAt.getTime() - b.createdAt.getTime();
-            });
+            const combinedTransactions = [
+                ...selfTransactions.map((transaction) => ({
+                    _id: transaction._id,
+                    type: transaction.type,
+                    amount: transaction.amount,
+                    balance: transaction.balance,
+                    particular:
+                        transaction.type === 'deposit'
+                            ? `BDT ${transaction.amount} deposited`
+                            : `BDT ${transaction.amount} is withdrawn`,
+                    createdAt: transaction.createdAt,
+                })),
+                ...transformedBeneficiaryTransactions.map((transaction) => ({
+                    _id: transaction._id,
+                    type: transaction.type,
+                    amount: transaction.amount,
+                    balance: transaction.balance,
+                    particular: transaction.particular,
+                    createdAt: transaction.createdAt,
+                })),
+            ].sort((a, b) => a.createdAt - b.createdAt);
 
             return res.status(200).json({
                 success: true,
                 message: 'Transactions fetched successfully',
-                data: { transactions },
+                data: {
+                    transactions: combinedTransactions,
+                },
             });
         } catch (error: any) {
             return next(
