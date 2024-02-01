@@ -27,16 +27,47 @@ const accountsHandlers = {
             const user: IRequestUser = req?.user;
             const userId = user.id;
 
-            const account = await accountModel.findOne({ userId });
+            // account has beneficiaries array with their account ids
+            // we need to find the name of each beneficiary with its account id
+            // name is in the users model
+            const account = await accountModel.findOne({ userId }).populate({
+                path: 'beneficiaries',
+                populate: {
+                    path: 'userId', // Assuming 'userId' is the field in the beneficiary account that references the User model
+                    select: 'name', // Select only the name field from the User model
+                    model: 'users', // Replace with your actual User model name if it's different
+                },
+                model: 'accounts',
+            });
 
             if (!account) {
                 return next(new CustomError(404, 'Account not found'));
             }
 
+            let modifiedBeneficiaries: any = [];
+
+            if (account.beneficiaries) {
+                modifiedBeneficiaries = account.beneficiaries.map(
+                    (beneficiary: any) => ({
+                        _id: beneficiary?._id, // Assuming _id is part of the User model
+                        name: beneficiary?.userId?.name,
+                    })
+                );
+            }
+
+            // get rid of the original beneficiaries array
+            account.beneficiaries = undefined;
+
+            // add the modified beneficiaries array
+            const modifiedAccount: any = {
+                ...account.toJSON(),
+                beneficiaries: modifiedBeneficiaries,
+            };
+
             return res.status(200).json({
                 success: true,
                 message: 'Account fetched successfully',
-                data: { account },
+                data: { account: modifiedAccount },
             });
         } catch (error) {
             return next(new CustomError(500, 'Something went wrong'));
@@ -165,6 +196,7 @@ const accountsHandlers = {
                 return next(new CustomError(404, 'Source account not found'));
             }
 
+            console.log(req.body);
             const { toAccountId, amount } = req.body;
 
             if (
@@ -228,7 +260,7 @@ const accountsHandlers = {
                     fromAccountId: fromAccount._id,
                     toAccountId,
                     amount,
-                    fromAccountBlance: fromAccount.balance,
+                    fromAccountBalance: fromAccount.balance,
                     toAccountBalance: toAccount.balance,
                 });
 
