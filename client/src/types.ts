@@ -22,12 +22,17 @@ export type statusType = {
     error: null | number;
 };
 
+export type BeneficiaryType = {
+    _id: string;
+    name: string;
+};
+
 export type AccountType = {
     _id: string;
     userId: string;
     balance: number;
     active: boolean;
-    beneficiaries: string[];
+    beneficiaries?: BeneficiaryType[];
     createdAt: string;
     updatedAt: string;
     deletedAt: string | null;
