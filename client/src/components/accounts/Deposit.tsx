@@ -25,7 +25,7 @@ const Deposit = ({ deposit }: { deposit: (amount: number) => void }) => {
             <h3 className="text-lg font-semibold mb-1">Deposit</h3>
             <div className="flex gap-2 items-center justify-between">
                 <input
-                    className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-600"
                     type="number"
                     placeholder="Enter amount"
                     value={amount}
@@ -39,7 +39,7 @@ const Deposit = ({ deposit }: { deposit: (amount: number) => void }) => {
                     </button>
                 ) : (
                     <button
-                        className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+                        className="bg-green-700 text-white px-3 py-1 rounded-md hover:bg-green-600"
                         onClick={handleDeposit}
                     >
                         Deposit

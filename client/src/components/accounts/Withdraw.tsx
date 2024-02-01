@@ -25,7 +25,7 @@ const Withdraw = ({ withdraw }: { withdraw: (amount: number) => void }) => {
             <h3 className="text-lg font-semibold mb-1">Withdraw</h3>
             <div className="flex gap-2 items-center">
                 <input
-                    className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
                     type="number"
                     placeholder="Enter amount"
                     value={amount}
@@ -38,7 +38,7 @@ const Withdraw = ({ withdraw }: { withdraw: (amount: number) => void }) => {
                     </button>
                 ) : (
                     <button
-                        className="bg-blue-700 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+                        className="bg-gray-700 text-white px-3 py-1 rounded-md hover:bg-gray-600"
                         onClick={handleWithdraw}
                     >
                         Withdraw
