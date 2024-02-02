@@ -1,8 +1,9 @@
 export type AuthContextType = {
     auth: {
         token: string;
+        name: string;
     };
-    setAuth: (auth: { token: string }) => void;
+    setAuth: (auth: { token: string; name: string }) => void;
 };
 
 export type RouteType = {
