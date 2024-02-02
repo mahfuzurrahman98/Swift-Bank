@@ -97,33 +97,36 @@ const Dashboard = () => {
         <ComponentLoader
             status={status}
             component={
-                <>
-                    <RootLayout>
-                        <div className="mb-4">
-                            Your account balance is:{' '}
+                <RootLayout>
+                    <div className="mb-4">
+                        Your account balance is:{' '}
+                        {account && account.balance && (
                             <span className="font-semibold">
-                                {account.balance}
+                                {account.balance.toLocaleString('en-US', {
+                                    style: 'currency',
+                                    currency: 'BDT',
+                                })}
                             </span>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4 mb-4">
-                            <div className="flex flex-col gap-y-5 p-4 rounded-md border-gray-300 border-2">
-                                <div className="w-full">
-                                    <Deposit deposit={deposit} />
-                                </div>
-                                <div className="w-full">
-                                    <Withdraw withdraw={withdraw} />
-                                </div>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4 mb-4">
+                        <div className="flex flex-col gap-y-5 p-4 rounded-md border-gray-300 border-2">
+                            <div className="w-full">
+                                <Deposit deposit={deposit} />
                             </div>
-                            <div className="w-full p-4 rounded-md border-gray-300 border-2">
-                                <FundTransfer
-                                    fundTransfer={transfer}
-                                    beneficiaries={account.beneficiaries}
-                                />
+                            <div className="w-full">
+                                <Withdraw withdraw={withdraw} />
                             </div>
                         </div>
-                        <Transactions transactions={transactions} />
-                    </RootLayout>
-                </>
+                        <div className="w-full p-4 rounded-md border-gray-300 border-2">
+                            <FundTransfer
+                                fundTransfer={transfer}
+                                beneficiaries={account.beneficiaries}
+                            />
+                        </div>
+                    </div>
+                    <Transactions transactions={transactions} />
+                </RootLayout>
             }
         />
     );
