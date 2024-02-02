@@ -209,6 +209,9 @@ const usersHandlers = {
                 message: 'User logged in successfully',
                 data: {
                     accessToken,
+                    user: {
+                        name: user.name,
+                    },
                 },
             });
         } catch (error: any) {
