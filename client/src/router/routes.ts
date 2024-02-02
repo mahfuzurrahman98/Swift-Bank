@@ -15,7 +15,7 @@ const routes: RouteType[] = [
     //     _protected: 0,
     // },
     { path: '/', element: Dashboard, _protected: 1 },
-    { path: '/beneficiaries', element: Beneficiaries, _protected: -1 },
+    { path: '/beneficiaries', element: Beneficiaries, _protected: 1 },
 ];
 
 export default routes;
