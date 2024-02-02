@@ -3,9 +3,11 @@ import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 
 import Beneficiaries from '../pages/Beneficiaries';
+import Register from '../pages/Register';
 import { RouteType } from '../types';
 
 const routes: RouteType[] = [
+    { path: '/register', element: Register, _protected: 0 },
     { path: '/login', element: Login, _protected: 0 },
     // {
     //     path: '/auth/google/callback',
