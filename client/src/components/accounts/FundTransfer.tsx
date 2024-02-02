@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { BeneficiaryType } from '../../types';
 
@@ -57,7 +58,7 @@ const FundTransfer = ({
                     disabled={btnLoading}
                 />
 
-                {options && (
+                {beneficiaries?.length && beneficiaries.length > 0 ? (
                     <Select
                         defaultValue={undefined}
                         options={options}
@@ -65,6 +66,13 @@ const FundTransfer = ({
                         isDisabled={!options || btnLoading}
                         placeholder={'Select beneficiary'}
                     />
+                ) : (
+                    <Link
+                        to="/beneficiaries"
+                        className="text-blue-700 hover:underline"
+                    >
+                        + Add beneficiary
+                    </Link>
                 )}
                 {btnLoading ? (
                     <button className="flex items-center gap-x-1 bg-gray-500 px-3 py-1 rounded cursor-not-allowed">
