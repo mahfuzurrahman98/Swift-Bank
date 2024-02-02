@@ -63,23 +63,22 @@ const usersHandlers = {
             // validate data
             // name should be present and its a string and should not be empty
             if (!name || typeof name !== 'string' || name.trim() === '') {
-                throw new CustomError(422, 'Name is required');
+                return next(new CustomError(422, 'Name is required'));
             }
             // email should be present and its a string and should not be empty
             if (!email || typeof email !== 'string' || email.trim() === '') {
-                throw new CustomError(422, 'Email is required');
+                return next(new CustomError(422, 'Email is required'));
             }
             // password should be present and its a string and should not be empty
             if (!password || typeof password !== 'string') {
-                throw new CustomError(422, 'Password is required');
+                return next(new CustomError(422, 'Password is required'));
             }
 
             // check if user already exists
             const existingUser = await userModel.findOne({ email });
             if (existingUser) {
-                throw new CustomError(
-                    409,
-                    'The email address is already in use'
+                return next(
+                    new CustomError(409, 'The email address is already in use')
                 );
             }
 
@@ -110,14 +109,34 @@ const usersHandlers = {
             // remove password from response
             user.password = undefined;
 
+            // create access token, and refresh token
+            const accessToken = Auth.createAccessToken({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            });
+            const refreshToken = Auth.createRefreshToken({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+            });
+
+            // set referesh token in the response cookie
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'strict',
+                path: '/',
+            });
+
             return res.status(201).json({
                 success: true,
                 message: 'Account created successfully',
-                data: { user, account },
+                data: { user, account, accessToken },
             });
         } catch (error: any) {
             await session.abortTransaction();
-            session.endSession();
+            // session.endSession();
             return next(
                 new CustomError(500, error.message || 'Something went wrong')
             );
