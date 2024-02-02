@@ -1,4 +1,5 @@
 import { NextFunction, Response } from 'express';
+import { Error as MongooseError } from 'mongoose';
 import {
     IFundTransferTransaction,
     ISelfTransaction,
@@ -299,6 +300,9 @@ const accountsHandlers = {
                 return next(new CustomError(422, 'Invalid beneficiary id'));
             }
 
+            // if beneficiaryId is a Cast to ObjectId failed for value "2345234324" (type string) at path "_id" for model "accounts"
+            // we need to check if beneficiaryId is a valid account id
+
             const beneficiary = await accountModel.findOne({
                 _id: beneficiaryId,
             });
@@ -328,6 +332,15 @@ const accountsHandlers = {
                 data: { account },
             });
         } catch (error: any) {
+            if (error instanceof MongooseError.CastError) {
+                return next(
+                    new CustomError(
+                        422,
+                        'Invalid beneficiary ids',
+                        'Mongoose Cast Error'
+                    )
+                );
+            }
             return next(
                 new CustomError(500, error.message || 'Something went wrong')
             );
