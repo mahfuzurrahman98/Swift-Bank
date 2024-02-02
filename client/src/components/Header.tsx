@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import useLogout from '../hooks/useLogout';
@@ -9,6 +10,7 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             await logout();
+            toast.success('Logged out successfully');
         } catch (error) {
             console.error(error);
         }
