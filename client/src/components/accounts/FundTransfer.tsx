@@ -46,6 +46,9 @@ const FundTransfer = ({
     return (
         <div className="">
             <h3 className="text-lg font-semibold mb-1">Fund Transfer</h3>
+            <Link to="/beneficiaries" className="text-blue-700 underline">
+                See beneficiary list
+            </Link>
             <div className="flex flex-col gap-2">
                 <input
                     className="w-full px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -57,7 +60,6 @@ const FundTransfer = ({
                     }
                     disabled={btnLoading}
                 />
-
                 {beneficiaries?.length && beneficiaries.length > 0 ? (
                     <Select
                         defaultValue={undefined}
