@@ -9,6 +9,7 @@ const useLogout = () => {
             await axiosPrivate.post('/users/logout');
             setAuth({
                 token: '',
+                name: '',
             });
         } catch (err) {
             console.error(err);

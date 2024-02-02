@@ -43,7 +43,7 @@ const GoogleLoginCallback = () => {
             localData['message'] = response.data.message;
             localStorage.setItem('data', JSON.stringify(localData));
 
-            setAuth({ token: accessToken });
+            setAuth({ token: accessToken, name: response.data.data.user.name });
         } catch (error: any) {
             setErrMsg(error.message);
             throw new Error(error.message);

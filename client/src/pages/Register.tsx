@@ -52,6 +52,7 @@ const Register = () => {
             console.log(data);
             setAuth({
                 token: respData.accessToken,
+                name: respData.user.name,
             });
             setLoading(false);
             setFormData({
@@ -60,7 +61,7 @@ const Register = () => {
                 password: '',
             });
             toast.success(msg);
-            
+
             navigate('/');
         } catch (error: any) {
             setLoading(false);

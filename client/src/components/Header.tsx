@@ -29,7 +29,8 @@ const Header = () => {
                 </div>
 
                 {auth.token != '' ? (
-                    <div className="flex justify-end items-center">
+                    <div className="flex gap-x-2 justify-end items-center">
+                        <div className="px-2 bg-gray-200 py-1">Welcome, {auth.name}</div>
                         <div className="flex items-center">
                             <button
                                 onClick={() => handleLogout()}

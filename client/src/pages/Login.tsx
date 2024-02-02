@@ -46,6 +46,7 @@ const Login = () => {
             console.log(data);
             setAuth({
                 token: respData.accessToken,
+                name: respData.user.name,
             });
             setLoading(false);
             setFormData({
