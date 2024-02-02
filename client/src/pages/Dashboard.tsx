@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 import ComponentLoader from '../components/ComponentLoader';
 import Deposit from '../components/accounts/Deposit';
 import FundTransfer from '../components/accounts/FundTransfer';
@@ -99,20 +98,6 @@ const Dashboard = () => {
             status={status}
             component={
                 <>
-                    <Toaster
-                        position="top-center"
-                        toastOptions={{
-                            className: '',
-                            duration: 5000,
-                            style: {
-                                background: '#363636',
-                                color: '#fff',
-                            },
-                            success: {
-                                duration: 3000,
-                            },
-                        }}
-                    />
                     <RootLayout>
                         <div className="mb-4">
                             Your account balance is:{' '}

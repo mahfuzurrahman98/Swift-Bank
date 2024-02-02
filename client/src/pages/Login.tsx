@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import ComponentLoader from '../components/ComponentLoader';
 import useAuth from '../hooks/useAuth';
@@ -81,6 +81,8 @@ const Login = () => {
         });
     }
 
+    useEffect(() => {}, []);
+
     return (
         <ComponentLoader
             status={status}
@@ -158,28 +160,19 @@ const Login = () => {
                                 </button>
                             </form>
 
-                            {/* <div className="text-center mt-5">
-                                <div className="flex items-center px-4 sm:px-12">
-                                    <hr className="border-t border-black flex-grow mr-3" />
-                                    <p className="text-gray-500 text-md font-sm">
-                                        or continue with
-                                    </p>
-                                    <hr className="border-t border-black flex-grow ml-3" />
-                                </div>
-                                <div className="flex justify-center mt-3">
-                                    <button
-                                        className="flex items-center px-3 py-1 rounded text-white bg-black hover:bg-gray-700"
-                                        onClick={login}
-                                    >
-                                        <img
-                                            src={GoogleIcon}
-                                            alt=""
-                                            width={18}
-                                        />
-                                        <span className="ml-2">Google</span>
-                                    </button>
-                                </div>
-                            </div> */}
+                            <div className="text-center mt-5">
+                                <p className="text-gray-600 text-md font-sm">
+                                    Don't have an account?{' '}
+                                    <span>
+                                        <Link
+                                            className="text-blue-800"
+                                            to="/register"
+                                        >
+                                            Register
+                                        </Link>
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </RootLayout>
