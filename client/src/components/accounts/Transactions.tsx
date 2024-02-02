@@ -70,23 +70,24 @@ const Transactions = ({
 
     return (
         <div>
+            <h3 className="font-semibold text-2xl mb-2 border-b-2 border-b-black">Transactions</h3>
             <div className="block w-full overflow-x-auto">
                 <table className="items-center bg-transparent w-full border-2 ">
                     <thead>
                         <tr>
-                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-2 text-md border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Date
                             </th>
-                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-2 text-md border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Type
                             </th>
-                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-2 text-md border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Amount
                             </th>
-                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-2 text-md border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Balance
                             </th>
-                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-3 text-sm border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
+                            <th className="px-6 bg-gray-200 text-black align-middle border border-solid border-gray-100 py-2 text-md border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                                 Particular
                             </th>
                         </tr>
