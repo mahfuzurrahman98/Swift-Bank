@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
@@ -8,6 +9,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
             <div className="max-w-6xl w-full mt-5 flex flex-col mx-auto px-4">
                 {children}
             </div>
+            <Footer />
         </div>
     );
 };
