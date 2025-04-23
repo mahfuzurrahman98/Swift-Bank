@@ -1,7 +1,7 @@
-import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
-import useLogout from '../hooks/useLogout';
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import useLogout from "../hooks/useLogout";
 
 const Header = () => {
     const { auth } = useAuth();
@@ -10,7 +10,7 @@ const Header = () => {
     const handleLogout = async () => {
         try {
             await logout();
-            toast.success('Logged out successfully');
+            toast.success("Logged out successfully");
         } catch (error) {
             console.error(error);
         }
@@ -28,13 +28,21 @@ const Header = () => {
                     </Link>
                 </div>
 
-                {auth.token != '' ? (
+                {auth.token != "" ? (
                     <div className="flex gap-x-2 justify-end items-center">
-                        <div className="px-2 bg-gray-200 py-1">Welcome, {auth.name}</div>
+                        <div className="px-2 bg-gray-200 py-1">
+                            <Link to="/profile">{auth.name}</Link>
+                        </div>
                         <div className="flex items-center">
+                            <Link
+                                to="/profile"
+                                className="ml-4 bg-gray-200 text-blue-800 px-3 py-1 rounded-md hover:bg-gray-300 rounded-md"
+                            >
+                                Profile
+                            </Link>
                             <button
-                                onClick={() => handleLogout()}
-                                className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-500"
+                                onClick={handleLogout}
+                                className="ml-4 bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                             >
                                 Logout
                             </button>

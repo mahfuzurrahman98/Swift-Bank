@@ -1,14 +1,14 @@
-import { NextFunction, Response } from 'express';
-import { Error as MongooseError } from 'mongoose';
+import { NextFunction, Response } from "express";
+import { Error as MongooseError } from "mongoose";
 import {
     IFundTransferTransaction,
     ISelfTransaction,
-} from '../../interfaces/transaction';
-import { IRequestUser, IRequestWithUser } from '../../interfaces/user';
-import CustomError from '../../utils/CustomError';
-import fundTransferTransactionModel from '../transactions/fund-transfer.model';
-import selfTransactionModel from '../transactions/self-transaction.model';
-import accountModel from './account.model';
+} from "../../interfaces/transaction";
+import { IRequestUser, IRequestWithUser } from "../../interfaces/user";
+import CustomError from "../../utils/CustomError";
+import fundTransferTransactionModel from "../transactions/fund-transfer.model";
+import selfTransactionModel from "../transactions/self-transaction.model";
+import accountModel from "./account.model";
 
 // interface ITransactionModified extends ITransaction {
 //     toAccount?: object;
@@ -18,11 +18,11 @@ const accountsHandlers = {
     getAccount: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -32,17 +32,17 @@ const accountsHandlers = {
             // we need to find the name of each beneficiary with its account id
             // name is in the users model
             const account = await accountModel.findOne({ userId }).populate({
-                path: 'beneficiaries',
+                path: "beneficiaries",
                 populate: {
-                    path: 'userId', // Assuming 'userId' is the field in the beneficiary account that references the User model
-                    select: 'name', // Select only the name field from the User model
-                    model: 'users', // Replace with your actual User model name if it's different
+                    path: "userId", // Assuming 'userId' is the field in the beneficiary account that references the User model
+                    select: "name", // Select only the name field from the User model
+                    model: "users", // Replace with your actual User model name if it's different
                 },
-                model: 'accounts',
+                model: "accounts",
             });
 
             if (!account) {
-                return next(new CustomError(404, 'Account not found'));
+                return next(new CustomError(404, "Account not found"));
             }
 
             let modifiedBeneficiaries: any = [];
@@ -52,7 +52,7 @@ const accountsHandlers = {
                     (beneficiary: any) => ({
                         _id: beneficiary?._id, // Assuming _id is part of the User model
                         name: beneficiary?.userId?.name,
-                    })
+                    }),
                 );
             }
 
@@ -67,22 +67,22 @@ const accountsHandlers = {
 
             return res.status(200).json({
                 success: true,
-                message: 'Account fetched successfully',
+                message: "Account fetched successfully",
                 data: { account: modifiedAccount },
             });
         } catch (error) {
-            return next(new CustomError(500, 'Something went wrong'));
+            return next(new CustomError(500, "Something went wrong"));
         }
     },
 
     deposit: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -90,13 +90,13 @@ const accountsHandlers = {
 
             const { amount } = req.body;
 
-            if (!amount || typeof amount !== 'number' || amount <= 0) {
-                return next(new CustomError(422, 'Invalid amount'));
+            if (!amount || typeof amount !== "number" || amount <= 0) {
+                return next(new CustomError(422, "Invalid amount"));
             }
 
             const account = await accountModel.findOne({ userId });
             if (!account) {
-                return next(new CustomError(404, 'Account not found'));
+                return next(new CustomError(404, "Account not found"));
             }
 
             account.balance += amount;
@@ -112,18 +112,18 @@ const accountsHandlers = {
                 await selfTransactionModel.create({
                     accountId: account._id,
                     amount,
-                    type: 'deposit',
+                    type: "deposit",
                     balance: account.balance,
                 });
 
             return res.status(200).json({
                 success: true,
-                message: 'Deposit successful',
+                message: "Deposit successful",
                 data: { account, transaction },
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },
@@ -131,11 +131,11 @@ const accountsHandlers = {
     withdraw: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -143,17 +143,17 @@ const accountsHandlers = {
 
             const { amount } = req.body;
 
-            if (!amount || typeof amount !== 'number' || amount <= 0) {
-                return next(new CustomError(422, 'Invalid amount'));
+            if (!amount || typeof amount !== "number" || amount <= 0) {
+                return next(new CustomError(422, "Invalid amount"));
             }
 
             const account = await accountModel.findOne({ userId });
             if (!account) {
-                return next(new CustomError(404, 'Account not found'));
+                return next(new CustomError(404, "Account not found"));
             }
 
             if (account.balance < amount) {
-                return next(new CustomError(400, 'Insufficient funds'));
+                return next(new CustomError(400, "Insufficient funds"));
             }
 
             account.balance -= amount;
@@ -163,18 +163,18 @@ const accountsHandlers = {
                 await selfTransactionModel.create({
                     accountId: account._id,
                     amount,
-                    type: 'withdraw',
+                    type: "withdraw",
                     balance: account.balance,
                 });
 
             return res.status(200).json({
                 success: true,
-                message: 'Withdrawal successful',
+                message: "Withdrawal successful",
                 data: { account, transaction },
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },
@@ -182,11 +182,11 @@ const accountsHandlers = {
     transfer: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -194,7 +194,7 @@ const accountsHandlers = {
             const fromAccount = await accountModel.findOne({ userId });
 
             if (!fromAccount) {
-                return next(new CustomError(404, 'Source account not found'));
+                return next(new CustomError(404, "Source account not found"));
             }
 
             console.log(req.body);
@@ -202,28 +202,28 @@ const accountsHandlers = {
 
             if (
                 !toAccountId ||
-                typeof toAccountId !== 'string' ||
+                typeof toAccountId !== "string" ||
                 toAccountId.trim().length === 0
             ) {
                 return next(
-                    new CustomError(422, 'Invalid destination account id')
+                    new CustomError(422, "Invalid destination account id"),
                 );
             }
 
             const toAccount = await accountModel.findOne({ _id: toAccountId });
             if (!toAccount) {
                 return next(
-                    new CustomError(404, 'Destination account not found')
+                    new CustomError(404, "Destination account not found"),
                 );
             }
 
-            if (!amount || typeof amount !== 'number' || amount <= 0) {
-                return next(new CustomError(422, 'Invalid amount'));
+            if (!amount || typeof amount !== "number" || amount <= 0) {
+                return next(new CustomError(422, "Invalid amount"));
             }
 
             if (!toAccount) {
                 return next(
-                    new CustomError(404, 'Destination account not found')
+                    new CustomError(404, "Destination account not found"),
                 );
             }
 
@@ -235,13 +235,13 @@ const accountsHandlers = {
                 return next(
                     new CustomError(
                         403,
-                        'Destination account is not a beneficiary'
-                    )
+                        "Destination account is not a beneficiary",
+                    ),
                 );
             }
 
             if (fromAccount.balance < amount) {
-                return next(new CustomError(400, 'Insufficient funds'));
+                return next(new CustomError(400, "Insufficient funds"));
             }
 
             fromAccount.balance -= amount;
@@ -267,12 +267,12 @@ const accountsHandlers = {
 
             return res.status(200).json({
                 success: true,
-                message: 'Transfer successful',
+                message: "Transfer successful",
                 data: { fromAccount, toAccount, transaction },
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },
@@ -280,11 +280,11 @@ const accountsHandlers = {
     createBeneficiary: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -294,10 +294,10 @@ const accountsHandlers = {
 
             if (
                 !beneficiaryId ||
-                typeof beneficiaryId !== 'string' ||
+                typeof beneficiaryId !== "string" ||
                 beneficiaryId.trim().length === 0
             ) {
-                return next(new CustomError(422, 'Invalid beneficiary id'));
+                return next(new CustomError(422, "Invalid beneficiary id"));
             }
 
             // if beneficiaryId is a Cast to ObjectId failed for value "2345234324" (type string) at path "_id" for model "accounts"
@@ -307,12 +307,12 @@ const accountsHandlers = {
                 _id: beneficiaryId,
             });
             if (!beneficiary) {
-                return next(new CustomError(404, 'No such account found'));
+                return next(new CustomError(404, "No such account found"));
             }
 
             const account = await accountModel.findOne({ userId });
             if (!account) {
-                return next(new CustomError(404, 'Account not found'));
+                return next(new CustomError(404, "Account not found"));
             }
 
             if (!account.beneficiaries) {
@@ -320,7 +320,7 @@ const accountsHandlers = {
             }
 
             if (account.beneficiaries.includes(beneficiaryId)) {
-                return next(new CustomError(400, 'Beneficiary already added'));
+                return next(new CustomError(400, "Beneficiary already added"));
             }
 
             account.beneficiaries.push(beneficiaryId);
@@ -328,7 +328,7 @@ const accountsHandlers = {
 
             return res.status(200).json({
                 success: true,
-                message: 'Beneficiary added successfully',
+                message: "Beneficiary added successfully",
                 data: { account },
             });
         } catch (error: any) {
@@ -336,13 +336,13 @@ const accountsHandlers = {
                 return next(
                     new CustomError(
                         422,
-                        'Invalid beneficiary ids',
-                        'Mongoose Cast Error'
-                    )
+                        "Invalid beneficiary ids",
+                        "Mongoose Cast Error",
+                    ),
                 );
             }
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },
@@ -350,11 +350,11 @@ const accountsHandlers = {
     getBeneficiaries: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -362,7 +362,7 @@ const accountsHandlers = {
 
             const account = await accountModel.findOne({ userId });
             if (!account) {
-                return next(new CustomError(404, 'Account not found'));
+                return next(new CustomError(404, "Account not found"));
             }
 
             const beneficiaries = await accountModel.find({
@@ -371,12 +371,12 @@ const accountsHandlers = {
 
             return res.status(200).json({
                 success: true,
-                message: 'Beneficiaries fetched successfully',
+                message: "Beneficiaries fetched successfully",
                 data: { beneficiaries },
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },
@@ -384,11 +384,11 @@ const accountsHandlers = {
     deleteBeneficiary: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -399,36 +399,36 @@ const accountsHandlers = {
 
             if (
                 !beneficiaryId ||
-                typeof beneficiaryId !== 'string' ||
+                typeof beneficiaryId !== "string" ||
                 beneficiaryId.trim().length === 0
             ) {
-                return next(new CustomError(422, 'Invalid beneficiary id'));
+                return next(new CustomError(422, "Invalid beneficiary id"));
             }
 
             const account = await accountModel.findOne({ userId });
             if (!account) {
-                return next(new CustomError(404, 'Source account not found'));
+                return next(new CustomError(404, "Source account not found"));
             }
             if (
                 !account.beneficiaries ||
                 !account.beneficiaries.includes(beneficiaryId)
             ) {
-                return next(new CustomError(404, 'No such beneficiary found'));
+                return next(new CustomError(404, "No such beneficiary found"));
             }
 
             account.beneficiaries = account.beneficiaries.filter(
-                (id) => id.toString() !== beneficiaryId
+                (id) => id.toString() !== beneficiaryId,
             );
             await account.save();
 
             return res.status(200).json({
                 success: true,
-                message: 'Beneficiary deleted successfully',
+                message: "Beneficiary deleted successfully",
                 data: { account },
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },
@@ -436,11 +436,11 @@ const accountsHandlers = {
     getTransactions: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction
+        next: NextFunction,
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
-                return next(new CustomError(401, 'Unauthorized'));
+                return next(new CustomError(401, "Unauthorized"));
             }
 
             const user: IRequestUser = req?.user;
@@ -448,7 +448,7 @@ const accountsHandlers = {
 
             const account = await accountModel.findOne({ userId });
             if (!account) {
-                return next(new CustomError(404, 'Account not found'));
+                return next(new CustomError(404, "Account not found"));
             }
 
             // Find self transactions, means the transaction made by the current user
@@ -481,21 +481,21 @@ const accountsHandlers = {
                         ],
                     })
                     .populate({
-                        path: 'fromAccountId',
-                        model: 'accounts',
+                        path: "fromAccountId",
+                        model: "accounts",
                         populate: {
-                            path: 'userId',
-                            model: 'users',
-                            select: 'name',
+                            path: "userId",
+                            model: "users",
+                            select: "name",
                         },
                     })
                     .populate({
-                        path: 'toAccountId',
-                        model: 'accounts',
+                        path: "toAccountId",
+                        model: "accounts",
                         populate: {
-                            path: 'userId',
-                            model: 'users',
-                            select: 'name',
+                            path: "userId",
+                            model: "users",
+                            select: "name",
                         },
                     });
 
@@ -539,11 +539,11 @@ const accountsHandlers = {
                     transformedTransaction.type =
                         transformedTransaction.fromAccountId ==
                         account._id.toString()
-                            ? 'transfered out'
-                            : 'transfered in';
+                            ? "transfered out"
+                            : "transfered in";
 
                     // Set balance and particular based on the transfer type
-                    if (transformedTransaction.type === 'transfered out') {
+                    if (transformedTransaction.type === "transfered out") {
                         transformedTransaction.balance =
                             transformedTransaction.fromAccountBalance;
                         transformedTransaction.particular = `Sent to ${transformedTransaction.toAccountName}`;
@@ -567,7 +567,7 @@ const accountsHandlers = {
                     amount: transaction.amount,
                     balance: transaction.balance,
                     particular:
-                        transaction.type === 'deposit'
+                        transaction.type === "deposit"
                             ? `BDT ${transaction.amount} deposited`
                             : `BDT ${transaction.amount} is withdrawn`,
                     createdAt: transaction.createdAt,
@@ -584,14 +584,14 @@ const accountsHandlers = {
 
             return res.status(200).json({
                 success: true,
-                message: 'Transactions fetched successfully',
+                message: "Transactions fetched successfully",
                 data: {
                     transactions: combinedTransactions,
                 },
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || 'Something went wrong')
+                new CustomError(500, error.message || "Something went wrong"),
             );
         }
     },

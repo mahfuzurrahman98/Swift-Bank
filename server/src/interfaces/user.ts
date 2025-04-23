@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import { Document } from 'mongoose';
+import { Request } from "express";
+import { Document } from "mongoose";
 
 export interface IUser extends Document {
     name: string;
@@ -20,4 +20,19 @@ export interface IRequestUser {
 
 export interface IRequestWithUser extends Request {
     user?: IRequestUser;
+}
+
+export interface CreateUserRequestBody {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export interface LoginRequestBody {
+    email: string;
+    password: string;
+}
+
+export interface GoogleLoginRequestBody {
+    code: string;
 }
