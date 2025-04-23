@@ -18,14 +18,14 @@ const accountsHandlers = {
     getAccount: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
                 return next(new CustomError(401, "Unauthorized"));
             }
 
-            const user: IRequestUser = req?.user;
+            const user: IRequestUser = req.user;
             const userId = user.id;
 
             // account has beneficiaries array with their account ids
@@ -52,7 +52,7 @@ const accountsHandlers = {
                     (beneficiary: any) => ({
                         _id: beneficiary?._id, // Assuming _id is part of the User model
                         name: beneficiary?.userId?.name,
-                    }),
+                    })
                 );
             }
 
@@ -78,7 +78,7 @@ const accountsHandlers = {
     deposit: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -123,7 +123,7 @@ const accountsHandlers = {
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },
@@ -131,7 +131,7 @@ const accountsHandlers = {
     withdraw: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -174,7 +174,7 @@ const accountsHandlers = {
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },
@@ -182,7 +182,7 @@ const accountsHandlers = {
     transfer: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -206,14 +206,14 @@ const accountsHandlers = {
                 toAccountId.trim().length === 0
             ) {
                 return next(
-                    new CustomError(422, "Invalid destination account id"),
+                    new CustomError(422, "Invalid destination account id")
                 );
             }
 
             const toAccount = await accountModel.findOne({ _id: toAccountId });
             if (!toAccount) {
                 return next(
-                    new CustomError(404, "Destination account not found"),
+                    new CustomError(404, "Destination account not found")
                 );
             }
 
@@ -223,7 +223,7 @@ const accountsHandlers = {
 
             if (!toAccount) {
                 return next(
-                    new CustomError(404, "Destination account not found"),
+                    new CustomError(404, "Destination account not found")
                 );
             }
 
@@ -235,8 +235,8 @@ const accountsHandlers = {
                 return next(
                     new CustomError(
                         403,
-                        "Destination account is not a beneficiary",
-                    ),
+                        "Destination account is not a beneficiary"
+                    )
                 );
             }
 
@@ -272,7 +272,7 @@ const accountsHandlers = {
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },
@@ -280,7 +280,7 @@ const accountsHandlers = {
     createBeneficiary: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -337,12 +337,12 @@ const accountsHandlers = {
                     new CustomError(
                         422,
                         "Invalid beneficiary ids",
-                        "Mongoose Cast Error",
-                    ),
+                        "Mongoose Cast Error"
+                    )
                 );
             }
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },
@@ -350,7 +350,7 @@ const accountsHandlers = {
     getBeneficiaries: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -376,7 +376,7 @@ const accountsHandlers = {
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },
@@ -384,7 +384,7 @@ const accountsHandlers = {
     deleteBeneficiary: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -417,7 +417,7 @@ const accountsHandlers = {
             }
 
             account.beneficiaries = account.beneficiaries.filter(
-                (id) => id.toString() !== beneficiaryId,
+                (id) => id.toString() !== beneficiaryId
             );
             await account.save();
 
@@ -428,7 +428,7 @@ const accountsHandlers = {
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },
@@ -436,7 +436,7 @@ const accountsHandlers = {
     getTransactions: async (
         req: IRequestWithUser,
         res: Response,
-        next: NextFunction,
+        next: NextFunction
     ): Promise<Response | void> => {
         try {
             if (!req?.user) {
@@ -591,7 +591,7 @@ const accountsHandlers = {
             });
         } catch (error: any) {
             return next(
-                new CustomError(500, error.message || "Something went wrong"),
+                new CustomError(500, error.message || "Something went wrong")
             );
         }
     },

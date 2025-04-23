@@ -415,21 +415,29 @@ const usersHandlers = {
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
+        console.log(req.user);
         try {
             if (!req.user) {
                 return next(new CustomError(401, "Unauthorized"));
             }
 
+            console.log("typeof req.user.id:", typeof req.user.id, req.user.id);
+
             // find user.id, user.name, user.email, account.id, account.active by aggregation
-            const user = await userModel.aggregate([
+            const users: any[] = await userModel.aggregate([
                 {
-                    $match: { _id: new Types.ObjectId(req.user?.id) },
+                    $match: { _id: new Types.ObjectId(req.user.id) },
+                },
+                {
+                    $addFields: {
+                        stringId: { $toString: "$_id" }, // convert ObjectId to string
+                    },
                 },
                 {
                     $lookup: {
                         from: "accounts",
-                        localField: "_id",
-                        foreignField: "userId",
+                        localField: "stringId", // match string version
+                        foreignField: "userId", // string stored in accounts
                         as: "account",
                     },
                 },
@@ -447,14 +455,14 @@ const usersHandlers = {
                 },
             ]);
 
-            if (!user) {
+            if (!users || users.length === 0) {
                 return next(new CustomError(404, "User not found"));
             }
 
             return res.status(200).json({
                 success: true,
                 message: "User profile fetched successfully",
-                data: { user },
+                data: { user: users[0] },
             });
         } catch (error: any) {
             return next(
