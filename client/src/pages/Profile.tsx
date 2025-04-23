@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface ProfileData {
     _id: string;
@@ -12,19 +13,13 @@ const Profile = () => {
     const [profile, setProfile] = useState<ProfileData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const axiosPrivate = useAxiosPrivate();
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await fetch("/api/users/profile", {
-                    credentials: "include",
-                });
-                const data = await res.json();
-                if (data.success && data.data && data.data.length > 0) {
-                    setProfile(data.data[0]);
-                } else {
-                    setError(data.message || "Profile not found");
-                }
+                const response = await axiosPrivate.get("/users/profile");
+                setProfile(response.data.data.user);
             } catch (err) {
                 setError("Failed to fetch profile");
             } finally {

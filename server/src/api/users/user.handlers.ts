@@ -454,7 +454,7 @@ const usersHandlers = {
             return res.status(200).json({
                 success: true,
                 message: "User profile fetched successfully",
-                data: user,
+                data: { user },
             });
         } catch (error: any) {
             return next(

@@ -36,7 +36,7 @@ const Header = () => {
                         <div className="flex items-center">
                             <Link
                                 to="/profile"
-                                className="ml-4 bg-gray-200 text-blue-800 px-3 py-1 rounded-md hover:bg-gray-300 rounded-md"
+                                className="ml-4 bg-gray-200 text-blue-800 px-3 py-1 hover:bg-gray-300 rounded-md"
                             >
                                 Profile
                             </Link>
