@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import useLogout from "../hooks/useLogout";
 import useAuth from "../hooks/useAuth";
@@ -7,7 +7,6 @@ import useAuth from "../hooks/useAuth";
 const Header = () => {
     const { auth } = useAuth();
     const logout = useLogout();
-    const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
@@ -26,7 +25,10 @@ const Header = () => {
     useEffect(() => {
         if (!dropdownOpen) return;
         function handleClick(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
                 setDropdownOpen(false);
             }
         }
@@ -38,18 +40,22 @@ const Header = () => {
         <div className="bg-white shadow">
             <nav className="w-full flex justify-between items-center mx-auto h-14 max-w-6xl px-4">
                 {/* Dropdown wrapper for outside click detection */}
-                <div ref={dropdownRef} className="flex items-center w-full justify-between">
-                <div className="flex items-center">
-                    <Link
-                        to="/"
-                        className="text-2xl font-bold text-blue-800 leading-none"
-                    >
-                        Swift Bank
-                    </Link>
+                <div
+                    ref={dropdownRef}
+                    className="flex items-center w-full justify-between"
+                >
+                    <div className="flex items-center">
+                        <Link
+                            to="/"
+                            className="text-2xl font-bold text-blue-800 leading-none"
+                        >
+                            Swift Bank
+                        </Link>
+                    </div>
                 </div>
 
                 {auth.token != "" ? (
-                    <div className="relative flex items-center">
+                    <div className="relative flex items-center" ref={dropdownRef}>
                         {/* Dropdown Trigger */}
                         <button
                             className="flex items-center px-4 py-2 bg-gray-200 text-blue-800 font-semibold rounded-md hover:bg-gray-300 transition focus:outline-none"
@@ -60,14 +66,25 @@ const Header = () => {
                             type="button"
                         >
                             {firstName}
-                            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            <svg
+                                className="ml-2 w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M19 9l-7 7-7-7"
+                                />
                             </svg>
                         </button>
                         {/* Dropdown Menu */}
                         {dropdownOpen && (
                             <div
-                                className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50 animate-fade-in"
+                                className="absolute right-0 top-11 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50 animate-fade-in"
                                 role="menu"
                                 aria-orientation="vertical"
                                 aria-labelledby="user-menu-button"
