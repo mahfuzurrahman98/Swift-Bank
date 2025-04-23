@@ -142,7 +142,6 @@ const usersHandlers = {
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
-        console.log("here in login");
         try {
             // get data from request body
             const { email, password } = req.body;
@@ -258,7 +257,6 @@ const usersHandlers = {
 
                 if (userinfoResponse.status === 200) {
                     const userinfo = userinfoResponse.data;
-                    // console.log('user info:\n', userinfo);
 
                     let responseMessage = "Login successful";
                     let responseStatus = 200;
@@ -415,13 +413,10 @@ const usersHandlers = {
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
-        console.log(req.user);
         try {
             if (!req.user) {
                 return next(new CustomError(401, "Unauthorized"));
             }
-
-            console.log("typeof req.user.id:", typeof req.user.id, req.user.id);
 
             // find user.id, user.name, user.email, account.id, account.active by aggregation
             const users: any[] = await userModel.aggregate([
@@ -478,7 +473,6 @@ const usersHandlers = {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            console.log("logout");
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 sameSite: "strict",
