@@ -568,8 +568,8 @@ const accountsHandlers = {
                     balance: transaction.balance,
                     particular:
                         transaction.type === "deposit"
-                            ? `BDT ${transaction.amount} deposited`
-                            : `BDT ${transaction.amount} is withdrawn`,
+                            ? `$${transaction.amount} deposited`
+                            : `$${transaction.amount} is withdrawn`,
                     createdAt: transaction.createdAt,
                 })),
                 ...transformedBeneficiaryTransactions.map((transaction) => ({

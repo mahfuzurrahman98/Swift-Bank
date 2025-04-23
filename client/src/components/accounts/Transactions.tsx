@@ -1,4 +1,4 @@
-import { TransactionType } from '../../types';
+import { TransactionType } from "../../types";
 
 const Transactions = ({
     transactions,
@@ -8,22 +8,22 @@ const Transactions = ({
     const formatMongoDate = (mongoDate: string): string => {
         const date = new Date(mongoDate);
         const options: any = {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZoneName: 'short',
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            timeZoneName: "short",
         };
-        return date.toLocaleDateString('en-US', options);
+        return date.toLocaleDateString("en-US", options);
     };
 
     const formatAmount = (amount: number): string => {
         // format with commas
-        return amount.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'BDT',
+        return amount.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
         });
     };
 
@@ -32,28 +32,28 @@ const Transactions = ({
             transactionType: string
         ): { backgroundColor: string; textColor: string } => {
             if (
-                transactionType === 'deposit' ||
-                transactionType === 'transfered in'
+                transactionType === "deposit" ||
+                transactionType === "transfered in"
             ) {
                 return {
-                    backgroundColor: 'bg-green-100',
-                    textColor: 'text-green-800',
+                    backgroundColor: "bg-green-100",
+                    textColor: "text-green-800",
                 };
             }
 
             if (
-                transactionType === 'withdraw' ||
-                transactionType === 'transfered out'
+                transactionType === "withdraw" ||
+                transactionType === "transfered out"
             ) {
                 return {
-                    backgroundColor: 'bg-red-100',
-                    textColor: 'text-red-800',
+                    backgroundColor: "bg-red-100",
+                    textColor: "text-red-800",
                 };
             }
 
             return {
-                backgroundColor: 'bg-gray-100',
-                textColor: 'text-gray-800',
+                backgroundColor: "bg-gray-100",
+                textColor: "text-gray-800",
             };
         };
 
@@ -70,7 +70,9 @@ const Transactions = ({
 
     return (
         <div>
-            <h3 className="font-semibold text-2xl mb-2 border-b-2 border-b-black">Transactions</h3>
+            <h3 className="font-semibold text-2xl mb-2 border-b-2 border-b-black">
+                Transactions
+            </h3>
             <div className="block w-full overflow-x-auto">
                 <table className="items-center bg-transparent w-full border-2 ">
                     <thead>

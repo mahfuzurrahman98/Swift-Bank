@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import ComponentLoader from '../components/ComponentLoader';
-import Deposit from '../components/accounts/Deposit';
-import FundTransfer from '../components/accounts/FundTransfer';
-import Transactions from '../components/accounts/Transactions';
-import Withdraw from '../components/accounts/Withdraw';
-import useAuth from '../hooks/useAuth';
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import { AccountType, TransactionType, statusType } from '../types';
-import RootLayout from './RootLayout';
+import { useEffect, useState } from "react";
+import ComponentLoader from "../components/ComponentLoader";
+import Deposit from "../components/accounts/Deposit";
+import FundTransfer from "../components/accounts/FundTransfer";
+import Transactions from "../components/accounts/Transactions";
+import Withdraw from "../components/accounts/Withdraw";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { AccountType, TransactionType, statusType } from "../types";
+import RootLayout from "./RootLayout";
 
 const Dashboard = () => {
     const axiosPrivate = useAxiosPrivate();
@@ -21,7 +21,7 @@ const Dashboard = () => {
 
     const getAccount = async () => {
         try {
-            const response = await axiosPrivate.get('/accounts');
+            const response = await axiosPrivate.get("/accounts");
             setAccount(response.data.data.account);
         } catch (error: any) {
             setAccount({} as AccountType);
@@ -31,7 +31,7 @@ const Dashboard = () => {
 
     const getTransactions = async () => {
         try {
-            const response = await axiosPrivate.get('/accounts/transactions');
+            const response = await axiosPrivate.get("/accounts/transactions");
             setTransactions(response.data.data.transactions);
         } catch (error: any) {
             setTransactions([]);
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
     const deposit = async (amount: number) => {
         try {
-            await axiosPrivate.post('/accounts/deposit', {
+            await axiosPrivate.post("/accounts/deposit", {
                 amount,
             });
         } catch (error: any) {
@@ -54,7 +54,7 @@ const Dashboard = () => {
 
     const withdraw = async (amount: number) => {
         try {
-            await axiosPrivate.post('/accounts/withdraw', {
+            await axiosPrivate.post("/accounts/withdraw", {
                 amount,
             });
         } catch (error: any) {
@@ -67,7 +67,7 @@ const Dashboard = () => {
 
     const transfer = async (amount: number, toAccountId: string) => {
         try {
-            await axiosPrivate.post('/accounts/transfer', {
+            await axiosPrivate.post("/accounts/transfer", {
                 amount,
                 toAccountId,
             });
@@ -80,7 +80,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        console.log('token:', auth.token);
+        console.log("token:", auth.token);
         (async () => {
             try {
                 await getAccount();
@@ -99,12 +99,12 @@ const Dashboard = () => {
             component={
                 <RootLayout>
                     <div className="mb-4">
-                        Your account balance is:{' '}
+                        Your account balance is:{" "}
                         {account && account.balance && (
                             <span className="font-semibold">
-                                {account.balance.toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: 'BDT',
+                                {account.balance.toLocaleString("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
                                 })}
                             </span>
                         )}
