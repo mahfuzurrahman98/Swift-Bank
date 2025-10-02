@@ -1,252 +1,252 @@
 #!/bin/bash
 
-# Swift Bank - Static Commit Script (Batch 2)
+# Swift Bank - Static Commit Script (Batch 3)
 # Next 30 files with proper commit messages
 
-echo "🚀 Starting static commit process for Swift Bank refactoring (Files 31-60)..."
+echo "🚀 Starting static commit process for Swift Bank refactoring (Files 61-90)..."
 
 # Reset all staged files first
 git reset HEAD
 
-# Commit 31: Auth routes
-git add backend/src/app/routes/auth.routes.ts
-git commit -m "feat: add authentication API routes
+# Commit 61: Frontend package.json
+git add frontend/package.json
+git commit -m "feat: add frontend package.json with React dependencies
 
-- Define magic link authentication endpoints
-- Add user registration and login routes
-- Include token validation and refresh endpoints"
+- Add React, TypeScript, and Vite dependencies
+- Configure UI libraries (shadcn/ui, Tailwind CSS)
+- Set up development and build scripts"
 
-# Commit 32: Routes index
-git add backend/src/app/routes/index.ts
-git commit -m "feat: add routes module index file
+# Commit 62: Frontend public favicon
+git add frontend/public/favicon.png
+git commit -m "feat: add application favicon
 
-- Export all API route modules
-- Configure route middleware and prefixes
-- Set up centralized routing configuration"
+- Add Swift Bank branded favicon
+- Configure for multiple device sizes
+- Include high-resolution icon support"
 
-# Commit 33: Account schema
-git add backend/src/app/schemas/account.schema.ts
-git commit -m "feat: add account validation schema
+# Commit 63: Vite SVG logo
+git add frontend/public/vite.svg
+git commit -m "feat: add Vite development logo
 
-- Define account creation validation rules
-- Add transaction amount and type validation
-- Include balance and currency validation"
+- Add Vite framework logo for development
+- Include SVG format for scalability
+- Configure for development environment"
 
-# Commit 34: Common schema
-git add backend/src/app/schemas/common.ts
-git commit -m "feat: add common validation schemas
+# Commit 64: API fetch client
+git add frontend/src/api/fetchClient.ts
+git commit -m "feat: add API fetch client utility
 
-- Define shared validation rules and patterns
-- Add pagination and filtering schemas
-- Include base entity validation schemas"
+- Implement centralized HTTP client
+- Add authentication token handling
+- Include error handling and response parsing"
 
-# Commit 35: Magic link schema
-git add backend/src/app/schemas/magic-link.schema.ts
-git commit -m "feat: add magic link validation schema
+# Commit 65: Main App component
+git add frontend/src/App.tsx
+git commit -m "feat: add main App component
 
-- Define email validation for magic link requests
-- Add device information validation
-- Include token expiration and security validation"
+- Set up React Router and routing
+- Configure theme provider and global state
+- Add error boundary and layout structure"
 
-# Commit 36: User serializer
-git add backend/src/app/serializers/user.serializer.ts
-git commit -m "feat: add user data serializer
+# Commit 66: React assets
+git add frontend/src/assets/react.svg
+git commit -m "feat: add React framework logo
 
-- Define user profile serialization logic
-- Add sensitive data filtering
-- Include role-based data exposure control"
+- Add React logo for development
+- Include SVG format for scalability
+- Configure for component library"
 
-# Commit 37: Account service
-git add backend/src/app/services/account.service.ts
-git commit -m "feat: add account service for banking operations
+# Commit 67: Magic Link Form Component
+git add frontend/src/components/auth/MagicLinkFormComponent.tsx
+git commit -m "feat: add magic link authentication form
 
-- Implement account creation and management logic
-- Add balance inquiry and transaction processing
-- Include account validation and business rules"
+- Implement email input and validation
+- Add magic link request functionality
+- Include loading states and error handling"
 
-# Commit 38: Auth service
-git add backend/src/app/services/auth.service.ts
-git commit -m "feat: add authentication service
+# Commit 68: Persist Session Component
+git add frontend/src/components/auth/PersistSessionComponent.tsx
+git commit -m "feat: add session persistence component
 
-- Implement magic link authentication logic
-- Add JWT token generation and validation
-- Include user session management"
+- Implement automatic session restoration
+- Add token refresh functionality
+- Include authentication state management"
 
-# Commit 39: Beneficiary service
-git add backend/src/app/services/beneficiary.service.ts
-git commit -m "feat: add beneficiary management service
+# Commit 69: Beneficiary Listing Component
+git add frontend/src/components/banking/BeneficiaryListingComponent.tsx
+git commit -m "feat: add beneficiary listing component
 
-- Implement beneficiary CRUD operations
-- Add beneficiary validation and verification
-- Include trusted contact management"
+- Display list of saved beneficiaries
+- Add search and filtering functionality
+- Include beneficiary management actions"
 
-# Commit 40: Email service
-git add backend/src/app/services/email.service.ts
-git commit -m "feat: add email service for notifications
+# Commit 70: Beneficiary Modal
+git add frontend/src/components/banking/BeneficiaryModal.tsx
+git commit -m "feat: add beneficiary management modal
 
-- Implement email sending functionality
-- Add template rendering and personalization
-- Include delivery tracking and error handling"
+- Implement add/edit beneficiary form
+- Add validation and error handling
+- Include account verification features"
 
-# Commit 41: Magic link service
-git add backend/src/app/services/magic-link.service.ts
-git commit -m "feat: add magic link service
+# Commit 71: Deposit Modal
+git add frontend/src/components/banking/DepositModal.tsx
+git commit -m "feat: add deposit transaction modal
 
-- Implement magic link generation and validation
-- Add device tracking and security features
-- Include link expiration and cleanup logic"
+- Implement deposit amount input and validation
+- Add payment method selection
+- Include transaction confirmation flow"
 
-# Commit 42: Token service
-git add backend/src/app/services/token.service.ts
-git commit -m "feat: add JWT token service
+# Commit 72: Transaction Listing Component
+git add frontend/src/components/banking/TransactionListingComponent.tsx
+git commit -m "feat: add transaction listing component
 
-- Implement token generation and validation
-- Add refresh token functionality
-- Include token blacklisting and security"
+- Display transaction history with pagination
+- Add filtering by date, type, and amount
+- Include transaction status indicators"
 
-# Commit 43: User service
-git add backend/src/app/services/user.service.ts
-git commit -m "feat: add user management service
+# Commit 73: Transaction Table
+git add frontend/src/components/banking/TransactionTable.tsx
+git commit -m "feat: add transaction data table
 
-- Implement user CRUD operations
-- Add profile management and preferences
-- Include role and permission management"
+- Implement sortable transaction table
+- Add column customization and export
+- Include responsive design for mobile"
 
-# Commit 44: Magic link email template
-git add backend/src/app/templates/auth/magic-link.ejs
-git commit -m "feat: add magic link email template
+# Commit 74: Transfer Modal
+git add frontend/src/components/banking/TransferModal.tsx
+git commit -m "feat: add fund transfer modal
 
-- Create responsive email template for magic links
-- Add branding and styling
-- Include security instructions and expiration info"
+- Implement beneficiary selection and amount input
+- Add transfer validation and confirmation
+- Include real-time balance checking"
 
-# Commit 45: Magic link email template (nested)
-git add backend/src/app/templates/email-templates/auth/magic-link.ejs
-git commit -m "feat: add nested magic link email template
+# Commit 75: Withdraw Modal
+git add frontend/src/components/banking/WithdrawModal.tsx
+git commit -m "feat: add withdrawal transaction modal
 
-- Create alternative email template structure
-- Add template inheritance and modularity
-- Include customizable branding elements"
+- Implement withdrawal amount validation
+- Add account balance verification
+- Include withdrawal method selection"
 
-# Commit 46: Cookie configuration
-git add backend/src/configs/cookie-config.ts
-git commit -m "feat: add cookie configuration
+# Commit 76: Error Component
+git add frontend/src/components/Error.tsx
+git commit -m "feat: add error display component
 
-- Define secure cookie settings
-- Add SameSite and HttpOnly configurations
-- Include domain and path restrictions"
+- Implement user-friendly error messages
+- Add error recovery actions
+- Include different error types and styling"
 
-# Commit 47: Backend main index
-git add backend/src/index.ts
-git commit -m "feat: add backend main entry point
+# Commit 77: Error Boundary
+git add frontend/src/components/ErrorBoundary.tsx
+git commit -m "feat: add React error boundary
 
-- Initialize Express application
-- Configure middleware and error handling
-- Set up database connection and server startup"
+- Catch and handle React component errors
+- Add error logging and reporting
+- Include fallback UI for crashed components"
 
-# Commit 48: Account seeder
-git add backend/src/seeders/account-seeder.ts
-git commit -m "feat: add account database seeder
+# Commit 78: Admin Header
+git add frontend/src/components/layouts/admin/AdminHeader.tsx
+git commit -m "feat: add admin layout header
 
-- Create sample account data for development
-- Add test users with different account types
-- Include initial balance and transaction history"
+- Implement navigation and user menu
+- Add logout and profile access
+- Include responsive design and branding"
 
-# Commit 49: Express type definitions
-git add backend/src/types/express.d.ts
-git commit -m "feat: add Express type definitions
+# Commit 79: Admin Layout
+git add frontend/src/components/layouts/admin/AdminLayout.tsx
+git commit -m "feat: add admin layout wrapper
 
-- Extend Express Request interface
-- Add custom user and authentication properties
-- Include type safety for middleware"
+- Implement main admin interface layout
+- Add sidebar navigation and content area
+- Include responsive design and accessibility"
 
-# Commit 50: Custom error utility
-git add backend/src/utils/custom-error.ts
-git commit -m "feat: add custom error handling utility
+# Commit 80: Admin Sidebar
+git add frontend/src/components/layouts/admin/AdminSidebar.tsx
+git commit -m "feat: add admin navigation sidebar
 
-- Define application-specific error classes
-- Add error codes and status mapping
-- Include error serialization and logging"
+- Implement collapsible navigation menu
+- Add active route highlighting
+- Include role-based menu items"
 
-# Commit 51: Error formatter helper
-git add backend/src/utils/helpers/error-formatter.ts
-git commit -m "feat: add error formatter helper
+# Commit 81: Auth Layout
+git add frontend/src/components/layouts/auth/AuthLayout.tsx
+git commit -m "feat: add authentication layout
 
-- Implement consistent error response formatting
-- Add validation error handling
-- Include stack trace filtering for production"
+- Implement centered auth form layout
+- Add branding and background styling
+- Include responsive design for all devices"
 
-# Commit 52: Hash utility helper
-git add backend/src/utils/helpers/hash.ts
-git commit -m "feat: add password hashing utility
+# Commit 82: Root Layout
+git add frontend/src/components/layouts/RootLayout.tsx
+git commit -m "feat: add root application layout
 
-- Implement bcrypt password hashing
-- Add salt generation and validation
-- Include secure comparison functions"
+- Implement base layout structure
+- Add global providers and context
+- Include theme and routing configuration"
 
-# Commit 53: Backend TypeScript config
-git add backend/tsconfig.json
-git commit -m "feat: add backend TypeScript configuration
+# Commit 83: Global Loader
+git add frontend/src/components/loaders/GlobalLoader.tsx
+git commit -m "feat: add global loading component
 
-- Configure TypeScript compiler options
-- Set up path mapping and module resolution
-- Include strict type checking and build options"
+- Implement full-screen loading indicator
+- Add animated spinner and progress bar
+- Include loading state management"
 
-# Commit 54: Commit script
+# Commit 84: Simple Loader
+git add frontend/src/components/loaders/SimpleLoader.tsx
+git commit -m "feat: add simple loading spinner
+
+- Implement lightweight loading indicator
+- Add customizable size and color options
+- Include accessibility features"
+
+# Commit 85: Table Empty State
+git add frontend/src/components/loaders/table/TableEmpty.tsx
+git commit -m "feat: add table empty state component
+
+- Display message when no data available
+- Add call-to-action buttons
+- Include illustration and helpful text"
+
+# Commit 86: Table Loader
+git add frontend/src/components/loaders/table/TableLoader.tsx
+git commit -m "feat: add table loading skeleton
+
+- Implement skeleton loading for tables
+- Add animated placeholder rows
+- Include responsive column layouts"
+
+# Commit 87: Date Tooltip
+git add frontend/src/components/miscellaneous/DateTooltip.tsx
+git commit -m "feat: add date formatting tooltip
+
+- Display formatted dates on hover
+- Add relative time calculations
+- Include timezone and locale support"
+
+# Commit 88: Password Format Helper
+git add frontend/src/components/miscellaneous/PasswordFormatHelper.tsx
+git commit -m "feat: add password format helper
+
+- Display password requirements
+- Add real-time validation feedback
+- Include strength indicator and tips"
+
+# Commit 89: Theme Provider
+git add frontend/src/components/theme-provider.tsx
+git commit -m "feat: add theme provider component
+
+- Implement dark/light theme switching
+- Add system theme detection
+- Include theme persistence and context"
+
+# Commit 90: Update commit script
 git add commit.sh
-git commit -m "chore: add commit management script
+git commit -m "chore: update commit management script
 
-- Create automated commit script for deployment
-- Add proper commit message formatting
-- Include batch processing for large changesets"
+- Add batch 3 commit commands
+- Update file tracking and organization
+- Include progress indicators and logging"
 
-# Commit 55: Frontend environment template
-git add frontend/.env.example
-git commit -m "feat: add frontend environment variables template
-
-- Add API endpoint configuration
-- Set authentication and session variables
-- Configure build and deployment settings"
-
-# Commit 56: Frontend banking documentation
-git add frontend/BANKING_README.md
-git commit -m "docs: add frontend banking documentation
-
-- Document banking features and components
-- Add user interface guidelines
-- Include development and testing instructions"
-
-# Commit 57: Shadcn components config
-git add frontend/components.json
-git commit -m "feat: add shadcn/ui components configuration
-
-- Configure component library settings
-- Set up Tailwind CSS integration
-- Define component generation and styling options"
-
-# Commit 58: ESLint configuration
-git add frontend/eslint.config.js
-git commit -m "feat: add ESLint configuration
-
-- Configure code quality and style rules
-- Add React and TypeScript specific rules
-- Include accessibility and best practice checks"
-
-# Commit 59: HTML entry point
-git add frontend/index.html
-git commit -m "feat: add HTML entry point
-
-- Create main HTML template
-- Add meta tags and viewport configuration
-- Include favicon and app manifest links"
-
-# Commit 60: Frontend package lock
-git add frontend/package-lock.json
-git commit -m "chore: add frontend package-lock.json for dependency locking
-
-- Lock React and TypeScript dependency versions
-- Ensure consistent builds across environments
-- Include security audit and vulnerability info"
-
-echo "✅ Successfully committed files 31-60!"
+echo "✅ Successfully committed files 61-90!"
 echo "📊 Run 'git log --oneline -30' to see the latest commits"
