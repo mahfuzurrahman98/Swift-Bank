@@ -20,3 +20,27 @@ server/.env
 server/node_modules
 server/dist
 server/tests
+
+
+# frontend files to ignore
+frontend/# Logs
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+
+frontend/# Editor directories and files
+frontend/.vscode/*
+frontend/!.vscode/extensions.json
+frontend/.DS_Store
+frontend/.env
+
+# backend files to ignore
+backend/.env
+backend/node_modules
+backend/dist
+backend/tests
