@@ -1,332 +1,332 @@
 #!/bin/bash
 
-# Swift Bank - Static Commit Script (Batch 4)
+# Swift Bank - Static Commit Script (Batch 5)
 # Next 40 files with proper commit messages
 
-echo "🚀 Starting static commit process for Swift Bank refactoring (Files 91-130)..."
+echo "🚀 Starting static commit process for Swift Bank refactoring (Files 131-170)..."
 
 # Reset all staged files first
 git reset HEAD
 
-# Commit 91: Alert Dialog UI Component
-git add frontend/src/components/ui/alert-dialog.tsx
-git commit -m "feat: add alert dialog UI component
+# Commit 131: Accepted File Types Data
+git add frontend/src/lib/data/accepted-file-types.ts
+git commit -m "feat: add accepted file types configuration
 
-- Implement modal confirmation dialogs
-- Add customizable actions and styling
-- Include accessibility and keyboard navigation"
+- Define allowed file extensions and MIME types
+- Add file size limits and validation rules
+- Include document and image type restrictions"
 
-# Commit 92: Alert UI Component
-git add frontend/src/components/ui/alert.tsx
-git commit -m "feat: add alert notification component
+# Commit 132: Countries Data
+git add frontend/src/lib/data/countries.json
+git commit -m "feat: add countries data configuration
 
-- Display success, error, and warning messages
-- Add dismissible and persistent alert types
-- Include icon support and custom styling"
+- Complete list of world countries with codes
+- Add country names, ISO codes, and flags
+- Include phone codes and currency information"
 
-# Commit 93: Avatar UI Component
-git add frontend/src/components/ui/avatar.tsx
-git commit -m "feat: add avatar display component
+# Commit 133: Error Messages Data
+git add frontend/src/lib/data/errors.ts
+git commit -m "feat: add error messages configuration
 
-- Show user profile pictures and initials
-- Add fallback handling and size variants
-- Include rounded and square avatar styles"
+- Centralized error message definitions
+- Add banking-specific error codes
+- Include user-friendly error descriptions"
 
-# Commit 94: Badge UI Component
-git add frontend/src/components/ui/badge.tsx
-git commit -m "feat: add badge indicator component
+# Commit 134: Predefined Steps Data
+git add frontend/src/lib/data/predefine-steps.ts
+git commit -m "feat: add predefined steps configuration
 
-- Display status indicators and labels
-- Add color variants and size options
-- Include notification badges and counters"
+- Define onboarding and process steps
+- Add step validation and progression rules
+- Include step descriptions and requirements"
 
-# Commit 95: Button UI Component
-git add frontend/src/components/ui/button.tsx
-git commit -m "feat: add button UI component
+# Commit 135: Services Data
+git add frontend/src/lib/data/services.ts
+git commit -m "feat: add services configuration data
 
-- Implement primary, secondary, and ghost variants
-- Add loading states and disabled handling
-- Include size variants and icon support"
+- Define available banking services
+- Add service descriptions and features
+- Include pricing and availability information"
 
-# Commit 96: Calendar UI Component
-git add frontend/src/components/ui/calendar.tsx
-git commit -m "feat: add calendar date picker component
+# Commit 136: Sidebar Items Data
+git add frontend/src/lib/data/sidebar-items.ts
+git commit -m "feat: add sidebar navigation items
 
-- Implement month and year navigation
-- Add date selection and range picking
-- Include disabled dates and custom styling"
+- Define navigation menu structure
+- Add icons, routes, and permissions
+- Include role-based menu visibility"
 
-# Commit 97: Card UI Component
-git add frontend/src/components/ui/card.tsx
-git commit -m "feat: add card container component
+# Commit 137: Timezones Data
+git add frontend/src/lib/data/timezones.ts
+git commit -m "feat: add timezones configuration
 
-- Create structured content containers
-- Add header, body, and footer sections
-- Include shadow variants and hover effects"
+- Complete list of world timezones
+- Add UTC offsets and DST information
+- Include timezone abbreviations and names"
 
-# Commit 98: Collapsible UI Component
-git add frontend/src/components/ui/collapsible.tsx
-git commit -m "feat: add collapsible content component
+# Commit 138: Magic Link Verify Page
+git add frontend/src/pages/auth/MagicLinkVerifyPage.tsx
+git commit -m "feat: add magic link verification page
 
-- Implement expandable content sections
-- Add smooth animations and transitions
-- Include trigger and content area management"
+- Handle magic link token verification
+- Add success and error state handling
+- Include automatic redirect after verification"
 
-# Commit 99: Custom Alert Message
-git add frontend/src/components/ui/custom/alert-message.tsx
-git commit -m "feat: add custom alert message component
+# Commit 139: Signin Page
+git add frontend/src/pages/auth/SigninPage.tsx
+git commit -m "feat: add signin page component
 
-- Enhanced alert with banking-specific styling
-- Add transaction status indicators
-- Include custom icons and color schemes"
+- Email-based authentication interface
+- Add magic link request functionality
+- Include form validation and error handling"
 
-# Commit 100: Autocomplete Input
-git add frontend/src/components/ui/custom/autocomplete-input.tsx
-git commit -m "feat: add autocomplete input component
+# Commit 140: Banking Dashboard Page
+git add frontend/src/pages/banking/BankingDashboardPage.tsx
+git commit -m "feat: add banking dashboard page
 
-- Implement search with suggestions
-- Add beneficiary and account autocomplete
-- Include keyboard navigation and filtering"
+- Main banking interface with account overview
+- Add balance display and recent transactions
+- Include quick action buttons and widgets"
 
-# Commit 101: Date Picker
-git add frontend/src/components/ui/custom/date-picker.tsx
-git commit -m "feat: add custom date picker component
+# Commit 141: Beneficiaries Page
+git add frontend/src/pages/banking/BeneficiariesPage.tsx
+git commit -m "feat: add beneficiaries management page
 
-- Banking-specific date selection
-- Add transaction date filtering
-- Include preset date ranges and validation"
-
-# Commit 102: Form Description with Message
-git add frontend/src/components/ui/custom/form-description-with-message.tsx
-git commit -m "feat: add form description component
-
-- Enhanced form field descriptions
-- Add validation message display
-- Include help text and error states"
-
-# Commit 103: Mode Toggle Small
-git add frontend/src/components/ui/custom/mode-toggle-sm.tsx
-git commit -m "feat: add small mode toggle component
-
-- Compact dark/light theme switcher
-- Add icon-only toggle variant
-- Include accessibility and keyboard support"
-
-# Commit 104: Mode Toggle
-git add frontend/src/components/ui/custom/mode-toggle.tsx
-git commit -m "feat: add theme mode toggle component
-
-- Full-featured dark/light theme switcher
-- Add system theme detection
-- Include smooth theme transitions"
-
-# Commit 105: Multi Select
-git add frontend/src/components/ui/custom/multi-select.tsx
-git commit -m "feat: add multi-select component
-
-- Select multiple options from list
-- Add tag display and removal
+- List and manage saved beneficiaries
+- Add beneficiary creation and editing
 - Include search and filtering capabilities"
 
-# Commit 106: OTP Input
-git add frontend/src/components/ui/custom/otp-input.tsx
-git commit -m "feat: add OTP input component
+# Commit 142: Transactions Page
+git add frontend/src/pages/banking/TransactionsPage.tsx
+git commit -m "feat: add transactions history page
 
-- Secure one-time password entry
-- Add auto-focus and paste handling
-- Include validation and error states"
+- Display transaction history with filtering
+- Add export and search functionality
+- Include transaction details and status"
 
-# Commit 107: Phone Input
-git add frontend/src/components/ui/custom/phone-input.tsx
-git commit -m "feat: add phone number input component
+# Commit 143: Router Index
+git add frontend/src/router/index.tsx
+git commit -m "feat: add main router configuration
 
-- International phone number formatting
-- Add country code selection
-- Include validation and formatting"
+- Set up React Router with all routes
+- Add route protection and authentication
+- Include error boundaries and fallbacks"
 
-# Commit 108: Status Badge
-git add frontend/src/components/ui/custom/status-badge.tsx
-git commit -m "feat: add status badge component
+# Commit 144: Protected Route Component
+git add frontend/src/router/ProtectedRoute.tsx
+git commit -m "feat: add protected route component
 
-- Banking-specific status indicators
-- Add transaction and account status
-- Include color coding and icons"
+- Authentication-based route protection
+- Add redirect to login for unauthorized users
+- Include role-based access control"
 
-# Commit 109: Toast Chat Message
-git add frontend/src/components/ui/custom/toast-chat-message.tsx
-git commit -m "feat: add toast chat message component
+# Commit 145: Routes Configuration
+git add frontend/src/router/routes.ts
+git commit -m "feat: add routes configuration
 
-- Banking notification toasts
-- Add transaction alerts and confirmations
-- Include action buttons and dismissal"
+- Define all application routes and paths
+- Add route metadata and permissions
+- Include nested routing structure"
 
-# Commit 110: Dialog UI Component
-git add frontend/src/components/ui/dialog.tsx
-git commit -m "feat: add dialog modal component
+# Commit 146: Auth Services
+git add frontend/src/services/auth-services.ts
+git commit -m "feat: add authentication services
 
-- Implement modal dialogs and overlays
-- Add close handling and backdrop click
-- Include animation and focus management"
+- Magic link authentication API calls
+- Add token management and validation
+- Include session handling and logout"
 
-# Commit 111: Dropdown Menu UI Component
-git add frontend/src/components/ui/dropdown-menu.tsx
-git commit -m "feat: add dropdown menu component
+# Commit 147: Banking Services
+git add frontend/src/services/banking-service.ts
+git commit -m "feat: add banking services
 
-- Implement contextual menus and actions
-- Add keyboard navigation and positioning
-- Include separators and menu groups"
+- Account and transaction API calls
+- Add beneficiary management services
+- Include balance and transfer operations"
 
-# Commit 112: Form UI Component
-git add frontend/src/components/ui/form.tsx
-git commit -m "feat: add form validation component
+# Commit 148: User Services
+git add frontend/src/services/user-service.ts
+git commit -m "feat: add user management services
 
-- React Hook Form integration
-- Add field validation and error display
-- Include form state management"
+- User profile and preferences API calls
+- Add account settings and updates
+- Include user data validation and formatting"
 
-# Commit 113: Input UI Component
-git add frontend/src/components/ui/input.tsx
-git commit -m "feat: add input field component
+# Commit 149: Auth Store
+git add frontend/src/stores/auth-store.ts
+git commit -m "feat: add authentication state store
 
-- Styled text input with variants
-- Add validation states and icons
-- Include placeholder and label support"
+- Zustand-based auth state management
+- Add user session and token storage
+- Include login/logout state handling"
 
-# Commit 114: Label UI Component
-git add frontend/src/components/ui/label.tsx
-git commit -m "feat: add form label component
+# Commit 150: Employee Onboarding Store
+git add frontend/src/stores/employee-onborading-store.ts
+git commit -m "feat: add employee onboarding store
 
-- Accessible form field labels
-- Add required field indicators
-- Include error and help text styling"
+- Employee onboarding process state
+- Add step progression and validation
+- Include form data persistence"
 
-# Commit 115: Popover UI Component
-git add frontend/src/components/ui/popover.tsx
-git commit -m "feat: add popover tooltip component
+# Commit 151: Notification Store
+git add frontend/src/stores/notification-store.ts
+git commit -m "feat: add notification state store
 
-- Floating content containers
-- Add positioning and arrow indicators
-- Include click and hover triggers"
+- Toast and alert notification management
+- Add notification queue and display logic
+- Include notification types and persistence"
 
-# Commit 116: Select UI Component
-git add frontend/src/components/ui/select.tsx
-git commit -m "feat: add select dropdown component
+# Commit 152: Onboarding Store
+git add frontend/src/stores/onboarding-store.ts
+git commit -m "feat: add user onboarding store
 
-- Styled select with custom options
-- Add search and multi-select variants
-- Include validation and placeholder support"
+- User onboarding process state management
+- Add step completion tracking
+- Include onboarding data validation"
 
-# Commit 117: Separator UI Component
-git add frontend/src/components/ui/separator.tsx
-git commit -m "feat: add separator divider component
+# Commit 153: Password Reset Store
+git add frontend/src/stores/password-reset-store.ts
+git commit -m "feat: add password reset store
 
-- Visual content separators
-- Add horizontal and vertical variants
-- Include spacing and styling options"
+- Password reset flow state management
+- Add token validation and expiration
+- Include reset form data handling"
 
-# Commit 118: Sheet UI Component
-git add frontend/src/components/ui/sheet.tsx
-git commit -m "feat: add sheet slide-out component
+# Commit 154: Custom Error Utility
+git add frontend/src/utils/CustomError.ts
+git commit -m "feat: add custom error utility class
 
-- Side panel and drawer implementation
-- Add slide animations and positioning
-- Include backdrop and close handling"
+- Enhanced error handling with context
+- Add error codes and categorization
+- Include stack trace and debugging info"
 
-# Commit 119: Sidebar UI Component
-git add frontend/src/components/ui/sidebar.tsx
-git commit -m "feat: add sidebar navigation component
+# Commit 155: Navigation Paths Enum
+git add frontend/src/utils/enums/navigation-paths.ts
+git commit -m "feat: add navigation paths enum
 
-- Collapsible navigation sidebar
-- Add menu items and active states
-- Include responsive behavior and icons"
+- Centralized route path constants
+- Add type safety for navigation
+- Include nested route definitions"
 
-# Commit 120: Skeleton UI Component
-git add frontend/src/components/ui/skeleton.tsx
-git commit -m "feat: add skeleton loading component
+# Commit 156: Protection Enum
+git add frontend/src/utils/enums/protection.ts
+git commit -m "feat: add route protection enum
 
-- Animated loading placeholders
-- Add various shape and size variants
-- Include shimmer effects and customization"
+- Define route protection levels
+- Add role-based access constants
+- Include permission and security levels"
 
-# Commit 121: Table UI Component
-git add frontend/src/components/ui/table.tsx
-git commit -m "feat: add data table component
+# Commit 157: Transaction Enum
+git add frontend/src/utils/enums/transaction.ts
+git commit -m "feat: add transaction enum definitions
 
-- Structured data display tables
-- Add sorting and pagination support
-- Include responsive and accessible design"
+- Transaction types and status constants
+- Add payment method and currency enums
+- Include transaction category definitions"
 
-# Commit 122: Tooltip UI Component
-git add frontend/src/components/ui/tooltip.tsx
-git commit -m "feat: add tooltip hover component
+# Commit 158: User Enum
+git add frontend/src/utils/enums/user.ts
+git commit -m "feat: add user enum definitions
 
-- Contextual help and information tooltips
-- Add positioning and delay options
-- Include keyboard accessibility support"
+- User role and status constants
+- Add account type and verification enums
+- Include user preference definitions"
 
-# Commit 123: Mobile Hook
-git add frontend/src/hooks/use-mobile.ts
-git commit -m "feat: add mobile detection hook
+# Commit 159: Chat Helper
+git add frontend/src/utils/helpers/chat.ts
+git commit -m "feat: add chat utility helpers
 
-- Detect mobile and tablet devices
-- Add responsive breakpoint handling
-- Include window resize event listening"
+- Chat message formatting and validation
+- Add emoji and text processing
+- Include chat history management"
 
-# Commit 124: Theme Hook
-git add frontend/src/hooks/use-theme.tsx
-git commit -m "feat: add theme management hook
+# Commit 160: Date Helper
+git add frontend/src/utils/helpers/date.ts
+git commit -m "feat: add date utility helpers
 
-- Dark/light theme state management
-- Add system theme preference detection
-- Include theme persistence and switching"
+- Date formatting and manipulation
+- Add timezone conversion utilities
+- Include relative time calculations"
 
-# Commit 125: Main CSS Styles
-git add frontend/src/index.css
-git commit -m "feat: add main application styles
+# Commit 161: Error Formatter Helper
+git add frontend/src/utils/helpers/error-formatter.ts
+git commit -m "feat: add error formatter helper
 
-- Tailwind CSS base styles and utilities
-- Add custom banking theme variables
-- Include responsive design and animations"
+- Consistent error message formatting
+- Add validation error processing
+- Include user-friendly error display"
 
-# Commit 126: Utility Functions
-git add frontend/src/lib/utils.ts
-git commit -m "feat: add utility functions library
+# Commit 162: File Helper
+git add frontend/src/utils/helpers/file.ts
+git commit -m "feat: add file utility helpers
 
-- Common helper functions and utilities
-- Add class name merging and formatting
-- Include validation and data manipulation"
+- File upload and validation utilities
+- Add file size and type checking
+- Include file processing and conversion"
 
-# Commit 127: Main Entry Point
-git add frontend/src/main.tsx
-git commit -m "feat: add React application entry point
+# Commit 163: Helpers Index
+git add frontend/src/utils/helpers/index.ts
+git commit -m "feat: add helpers module index
 
-- Initialize React app with providers
-- Add router and theme configuration
-- Include error boundary and global setup"
+- Export all utility helper functions
+- Add centralized helper imports
+- Include helper function organization"
 
-# Commit 128: Landing Page
-git add frontend/src/pages/Page.tsx
-git commit -m "feat: add landing page component
+# Commit 164: Logger Helper
+git add frontend/src/utils/helpers/logger.ts
+git commit -m "feat: add logging utility helper
 
-- Main application landing page
-- Add hero section and feature highlights
-- Include call-to-action and navigation"
+- Structured logging with levels
+- Add development and production logging
+- Include error tracking and debugging"
 
-# Commit 129: Test Page
-git add frontend/src/pages/TestPage.tsx
-git commit -m "feat: add test page component
+# Commit 165: Sanitize Helper
+git add frontend/src/utils/helpers/sanitize.ts
+git commit -m "feat: add data sanitization helper
 
-- Development testing and debugging page
-- Add component showcase and examples
-- Include feature testing and validation"
+- Input sanitization and validation
+- Add XSS protection utilities
+- Include data cleaning functions"
 
-# Commit 130: Update commit script
+# Commit 166: Slug Helper
+git add frontend/src/utils/helpers/slug.ts
+git commit -m "feat: add URL slug utility helper
+
+- Generate URL-friendly slugs
+- Add string normalization utilities
+- Include special character handling"
+
+# Commit 167: Step Helper
+git add frontend/src/utils/helpers/step.ts
+git commit -m "feat: add step progression helper
+
+- Multi-step form progression logic
+- Add step validation and navigation
+- Include step completion tracking"
+
+# Commit 168: Sub-step Helper
+git add frontend/src/utils/helpers/sub-step.ts
+git commit -m "feat: add sub-step utility helper
+
+- Nested step progression management
+- Add sub-step validation and flow
+- Include conditional step logic"
+
+# Commit 169: Auth Interfaces
+git add frontend/src/utils/interfaces/auth-interfaces.ts
+git commit -m "feat: add authentication interfaces
+
+- TypeScript interfaces for auth data
+- Add user session and token types
+- Include authentication response types"
+
+# Commit 170: Update commit script
 git add commit.sh
 git commit -m "chore: update commit management script
 
-- Add batch 4 with 40 commit commands
+- Add batch 5 with 40 commit commands
 - Update file tracking and organization
-- Include enhanced progress indicators"
+- Include comprehensive progress tracking"
 
-echo "✅ Successfully committed files 91-130!"
+echo "✅ Successfully committed files 131-170!"
 echo "📊 Run 'git log --oneline -40' to see the latest commits"
