@@ -91,38 +91,35 @@ class BankingService {
     }
 
     // Transaction operations
-    async getTransactions(
-        params?: {
-            page?: number;
-            limit?: number;
-            q?: string;
-            type?: string;
-            startDate?: string;
-            endDate?: string;
-        }
-    ): Promise<ApiResponse<TransactionsResponse>> {
+    async getTransactions(params?: {
+        page?: number;
+        limit?: number;
+        q?: string;
+        type?: string;
+        startDate?: string;
+        endDate?: string;
+    }): Promise<ApiResponse<TransactionsResponse>> {
         try {
             const accessToken = this.getAccessToken();
-            
+
             // Build query string
             const queryParams = new URLSearchParams();
-            if (params?.page) queryParams.append("page", params.page.toString());
-            if (params?.limit) queryParams.append("limit", params.limit.toString());
+            if (params?.page)
+                queryParams.append("page", params.page.toString());
+            if (params?.limit)
+                queryParams.append("limit", params.limit.toString());
             if (params?.q) queryParams.append("q", params.q);
             if (params?.type) queryParams.append("type", params.type);
-            if (params?.startDate) queryParams.append("startDate", params.startDate);
+            if (params?.startDate)
+                queryParams.append("startDate", params.startDate);
             if (params?.endDate) queryParams.append("endDate", params.endDate);
-            
+
             const queryString = queryParams.toString();
-            const url = queryString 
-                ? `accounts/transactions?${queryString}` 
+            const url = queryString
+                ? `accounts/transactions?${queryString}`
                 : "accounts/transactions";
-            
-            const request: FetchClient = createRequest(
-                url,
-                "GET",
-                accessToken
-            );
+
+            const request: FetchClient = createRequest(url, "GET", accessToken);
             return await request.call<TransactionsResponse>();
         } catch (error: any) {
             logger.error("Error fetching transactions:", error);
@@ -131,14 +128,28 @@ class BankingService {
     }
 
     // Beneficiary operations
-    async getBeneficiaries(): Promise<ApiResponse<BeneficiariesResponse>> {
+    async getBeneficiaries(params?: {
+        page?: number;
+        limit?: number;
+        q?: string;
+    }): Promise<ApiResponse<BeneficiariesResponse>> {
         try {
             const accessToken = this.getAccessToken();
-            const request: FetchClient = createRequest(
-                "accounts/beneficiaries",
-                "GET",
-                accessToken
-            );
+
+            // Build query string
+            const queryParams = new URLSearchParams();
+            if (params?.page)
+                queryParams.append("page", params.page.toString());
+            if (params?.limit)
+                queryParams.append("limit", params.limit.toString());
+            if (params?.q) queryParams.append("q", params.q);
+
+            const queryString = queryParams.toString();
+            const url = queryString
+                ? `accounts/beneficiaries?${queryString}`
+                : "accounts/beneficiaries";
+
+            const request: FetchClient = createRequest(url, "GET", accessToken);
             return await request.call<BeneficiariesResponse>();
         } catch (error: any) {
             logger.error("Error fetching beneficiaries:", error);
