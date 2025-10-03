@@ -5,6 +5,7 @@ import http from "http";
 import router from "@/app/routes";
 import { connectMongo } from "@/app/data-source";
 import { CustomError } from "@/utils/custom-error";
+import { resolveServerDownIssue } from "@/utils/helpers/misc";
 
 const app: Express = express();
 
@@ -89,6 +90,9 @@ export async function startServer(): Promise<Express> {
             }
         }
     );
+
+    // resolve server down issue
+    await resolveServerDownIssue();
 
     // Start the server only after DB is ready
     const PORT = process.env.PORT || 8001;
