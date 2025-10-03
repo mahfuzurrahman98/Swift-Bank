@@ -1,7 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import http from "http";
 import router from "@/app/routes";
 import { connectMongo } from "@/app/data-source";
 import { CustomError } from "@/utils/custom-error";
@@ -18,7 +17,7 @@ app.use(cookieParser());
 // add publuc folder as static folder
 app.use(express.static("public"));
 
-export async function startServer(): Promise<Express> {
+export async function getApp(): Promise<Express> {
     try {
         await connectMongo();
     } catch (error: any) {
@@ -89,12 +88,6 @@ export async function startServer(): Promise<Express> {
             }
         }
     );
-
-    // Start the server only after DB is ready
-    const PORT = process.env.PORT || 8001;
-    const server = http.createServer(app);
-
-    server.listen(PORT, () => console.log(`Server running on port ${PORT} 🚀`));
 
     return app;
 }
