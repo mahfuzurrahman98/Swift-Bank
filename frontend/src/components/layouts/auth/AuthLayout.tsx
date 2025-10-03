@@ -22,7 +22,7 @@ export function AuthLayout({
                 <header className="py-4 px-6 flex justify-between items-center">
                     {showLogo && (
                         <div className="font-bold text-3xl">
-                            {import.meta.env.VITE_APP_NAME}
+                            💰 {import.meta.env.VITE_APP_NAME}
                         </div>
                     )}
                     <div className="ml-auto">
