@@ -23,6 +23,16 @@ export class BeneficiaryService {
         beneficiaryId: string
     ): Promise<Account> {
         try {
+            // First check if user exists and get their account
+            const account = await AccountModel.findOne({
+                userId,
+                deletedAt: null,
+            }).exec();
+            if (!account) {
+                throw new CustomError(404, "Source account not found");
+            }
+
+            // Then check if beneficiary account exists
             const beneficiaryAccount = await AccountModel.findOne({
                 _id: beneficiaryId,
                 deletedAt: null,
@@ -34,15 +44,7 @@ export class BeneficiaryService {
                 })
                 .exec();
             if (!beneficiaryAccount) {
-                throw new CustomError(404, "No such account found");
-            }
-
-            const account = await AccountModel.findOne({
-                userId,
-                deletedAt: null,
-            }).exec();
-            if (!account) {
-                throw new CustomError(404, "Account not found");
+                throw new CustomError(404, "Beneficiary account not found");
             }
 
             if (!account.beneficiaries) {
@@ -67,11 +69,6 @@ export class BeneficiaryService {
 
             return account;
         } catch (error: any) {
-            // Handle Mongoose CastError for invalid ObjectId
-            if (error.name === "CastError") {
-                throw new CustomError(422, "Invalid beneficiary ID");
-            }
-
             throw error instanceof CustomError
                 ? error
                 : new CustomError(
@@ -157,6 +154,8 @@ export class BeneficiaryService {
 
             const totalPages = Math.ceil(total / limit);
             const hasMore = page < totalPages;
+
+            console.log("paginatedBeneficiaries:", paginatedBeneficiaries);
 
             return {
                 beneficiaries: paginatedBeneficiaries,
