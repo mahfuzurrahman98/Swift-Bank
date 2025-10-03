@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { bankingService } from "@/services/banking-service";
 import { TransactionListingComponent } from "@/components/banking/TransactionListingComponent";
+import { DepositModal } from "@/components/banking/DepositModal";
+import { WithdrawModal } from "@/components/banking/WithdrawModal";
+import { FundTransferModal } from "@/components/banking/FundTransferModal";
 import { TableLoader } from "@/components/loaders/table/TableLoader";
 import { TableEmpty } from "@/components/loaders/table/TableEmpty";
 import { AlertMessage } from "@/components/ui/custom/alert-message";
@@ -25,15 +28,24 @@ import {
     X,
     Calendar,
     Loader2,
+    Plus,
+    Minus,
+    Send,
 } from "lucide-react";
 import { TransactionType } from "@/utils/enums/transaction";
-import type { Transaction } from "@/utils/interfaces/banking";
+import type { Transaction, Account } from "@/utils/interfaces/banking";
 
 export default function TransactionsPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [account, setAccount] = useState<Account | null>(null);
+
+    // Modal states
+    const [depositModalOpen, setDepositModalOpen] = useState(false);
+    const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
+    const [transferModalOpen, setTransferModalOpen] = useState(false);
 
     // Pagination metadata
     const [totalPages, setTotalPages] = useState(1);
@@ -64,6 +76,16 @@ export default function TransactionsPage() {
         return date.toISOString().split("T")[0];
     };
 
+    // Fetch account data
+    const fetchAccount = async () => {
+        try {
+            const { data } = await bankingService.getAccount();
+            setAccount(data.account);
+        } catch (err: any) {
+            console.error("Failed to fetch account:", err);
+        }
+    };
+
     // Fetch transactions based on URL params
     const fetchTransactions = async () => {
         try {
@@ -90,6 +112,16 @@ export default function TransactionsPage() {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    // Refresh data after successful operations
+    const refreshData = () => {
+        fetchAccount();
+        fetchTransactions();
+    };
+
+    const handleTransferSuccess = () => {
+        refreshData();
     };
 
     // Update URL params
@@ -147,6 +179,7 @@ export default function TransactionsPage() {
 
     // Fetch when URL params change
     useEffect(() => {
+        fetchAccount();
         fetchTransactions();
     }, [searchParams]);
 
@@ -156,6 +189,37 @@ export default function TransactionsPage() {
                 <h1 className="text-3xl font-bold tracking-tight">
                     Transactions
                 </h1>
+                <div className="flex gap-2">
+                    <Button
+                        onClick={() => setDepositModalOpen(true)}
+                        className="bg-green-600 hover:bg-green-700"
+                    >
+                        <Plus className="size-4" />
+                        Deposit
+                    </Button>
+                    <Button
+                        onClick={() => setWithdrawModalOpen(true)}
+                        variant="outline"
+                        className="border-red-200 text-red-600 hover:bg-red-50"
+                    >
+                        <Minus className="size-4" />
+                        Withdraw
+                    </Button>
+                    <Button
+                        onClick={() => setTransferModalOpen(true)}
+                        disabled={!account?.beneficiaries?.length}
+                        variant="outline"
+                        className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                        title={
+                            !account?.beneficiaries?.length
+                                ? "Add beneficiaries to enable transfers"
+                                : "Transfer funds to beneficiaries"
+                        }
+                    >
+                        <Send className="size-4" />
+                        Transfer
+                    </Button>
+                </div>
             </div>
 
             {/* Filters Section */}
@@ -440,6 +504,23 @@ export default function TransactionsPage() {
                     ) : null}
                 </>
             )}
+
+            {/* Modals */}
+            <DepositModal
+                open={depositModalOpen}
+                onOpenChange={setDepositModalOpen}
+                onSuccess={refreshData}
+            />
+            <WithdrawModal
+                open={withdrawModalOpen}
+                onOpenChange={setWithdrawModalOpen}
+                onSuccess={refreshData}
+            />
+            <FundTransferModal
+                open={transferModalOpen}
+                onOpenChange={setTransferModalOpen}
+                onTransferSuccess={handleTransferSuccess}
+            />
         </div>
     );
 }
