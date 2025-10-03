@@ -14,6 +14,11 @@ import {
 import { RequestUser } from "@/app/interfaces/auth.interface";
 import {
     AccountResponseDTO,
+    AddBeneficiaryRequestDTO,
+    BeneficiariesResponseDTO,
+    BeneficiaryIdParamDTO,
+    BeneficiaryQueryParams,
+    DeleteBeneficiaryResponseDTO,
     DepositRequestDTO,
     DepositResponseDTO,
     TransactionQueryParams,
@@ -54,7 +59,7 @@ export class AccountsController {
      */
     getAccount = async (
         request: Request,
-        response: Response<ApiResponseDTO>,
+        response: Response<AccountResponseDTO>,
         next: NextFunction
     ) => {
         try {
@@ -191,16 +196,18 @@ export class AccountsController {
      * @param next - Express next middleware function
      */
     addBeneficiary = async (
-        request: Request,
+        request: Request<{}, AccountResponseDTO, AddBeneficiaryRequestDTO>,
         response: Response<AccountResponseDTO>,
         next: NextFunction
     ) => {
         try {
-            // Validate request body
-            const { beneficiaryId } = addBeneficiarySchema.parse(request.body);
-
             const user = request.user as RequestUser;
             const userId = user._id;
+
+            // Validate request body using schema
+            const validatedBody: AddBeneficiaryRequestDTO =
+                addBeneficiarySchema.parse(request.body);
+            const { beneficiaryId } = validatedBody;
 
             const account = await this.beneficiaryService.addBeneficiary(
                 userId,
@@ -224,20 +231,39 @@ export class AccountsController {
      * @param next - Express next middleware function
      */
     getBeneficiaries = async (
-        request: Request,
-        response: Response<ApiResponseDTO>,
+        request: Request<
+            {},
+            BeneficiariesResponseDTO,
+            {},
+            BeneficiaryQueryParams
+        >,
+        response: Response<BeneficiariesResponseDTO>,
         next: NextFunction
     ) => {
         try {
             const user = request.user as RequestUser;
             const userId = user._id;
 
-            const beneficiaries =
-                await this.beneficiaryService.getBeneficiaries(userId);
+            // Extract and validate query parameters
+            const queryParams: BeneficiaryQueryParams = {
+                page: request.query.page
+                    ? parseInt(request.query.page.toString())
+                    : 1,
+                limit: request.query.limit
+                    ? parseInt(request.query.limit.toString())
+                    : 10,
+                q: request.query.q?.toString(),
+            };
+
+            const { beneficiaries, meta } =
+                await this.beneficiaryService.getBeneficiaries(
+                    userId,
+                    queryParams
+                );
 
             response.status(200).json({
                 message: "Beneficiaries fetched successfully",
-                data: { beneficiaries },
+                data: { beneficiaries, meta },
             });
         } catch (error: any) {
             next(formatError(error));
@@ -252,28 +278,27 @@ export class AccountsController {
      * @param next - Express next middleware function
      */
     deleteBeneficiary = async (
-        request: Request,
-        response: Response<ApiResponseDTO>,
+        request: Request<BeneficiaryIdParamDTO, DeleteBeneficiaryResponseDTO>,
+        response: Response<DeleteBeneficiaryResponseDTO>,
         next: NextFunction
     ) => {
         try {
-            // Validate request params
-            const validatedParams = beneficiaryIdParamSchema.parse(
-                request.params
-            );
-            const beneficiaryId = validatedParams._id;
-
             const user = request.user as RequestUser;
             const userId = user._id;
 
-            const account = await this.beneficiaryService.deleteBeneficiary(
+            // Validate request params using schema
+            const validatedParams: BeneficiaryIdParamDTO =
+                beneficiaryIdParamSchema.parse(request.params);
+            const beneficiaryId = validatedParams._id;
+
+            await this.beneficiaryService.deleteBeneficiary(
                 userId,
                 beneficiaryId
             );
 
             response.status(200).json({
                 message: "Beneficiary deleted successfully",
-                data: { account },
+                data: {},
             });
         } catch (error: any) {
             next(formatError(error));
