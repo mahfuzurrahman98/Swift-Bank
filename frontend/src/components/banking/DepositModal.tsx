@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { bankingService } from "@/services/banking-service";
 import {
     Dialog,
@@ -21,26 +20,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, DollarSign, Plus } from "lucide-react";
+import { Loader, DollarSign } from "lucide-react";
 import { toast } from "sonner";
-
-const depositSchema = z.object({
-    amount: z
-        .string()
-        .min(1, "Amount is required")
-        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-            message: "Amount must be a positive number",
-        })
-        .refine((val) => Number(val) <= 10000, {
-            message: "Maximum deposit amount is $10,000",
-        })
-        .refine((val) => Number(val) >= 1, {
-            message: "Minimum deposit amount is $1",
-        }),
-});
-
-type DepositFormData = z.infer<typeof depositSchema>;
+import {
+    type DepositPayload,
+    depositSchema,
+} from "@/utils/schemas/account-schemas";
 
 interface DepositModalProps {
     open: boolean;
@@ -48,70 +33,67 @@ interface DepositModalProps {
     onSuccess?: () => void;
 }
 
-export function DepositModal({ open, onOpenChange, onSuccess }: DepositModalProps) {
+export function DepositModal({
+    open,
+    onOpenChange,
+    onSuccess,
+}: DepositModalProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
-    const form = useForm<DepositFormData>({
+    const form = useForm<DepositPayload>({
         resolver: zodResolver(depositSchema),
         defaultValues: {
             amount: "",
         },
     });
 
-    const onSubmit = async (data: DepositFormData) => {
-        setIsLoading(true);
-        setError(null);
-
+    const handleDeposit = async (data: DepositPayload) => {
         try {
-            const response = await bankingService.deposit({ amount: Number(data.amount) });
-            
-            if (response.success) {
-                toast.success("Deposit successful!", {
-                    description: `$${data.amount} has been deposited to your account.`,
-                });
-                form.reset();
-                onOpenChange(false);
-                onSuccess?.();
-            } else {
-                setError("Deposit failed. Please try again.");
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An unexpected error occurred");
+            setIsLoading(true);
+            // Convert string to number for API call
+            const amount = parseInt(data.amount, 10);
+            await bankingService.deposit({ amount });
+
+            toast.success("Deposit successful!");
+            handleClose();
+            onSuccess?.();
+        } catch (error: any) {
+            toast.error(error.message || "Failed to deposit money");
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleClose = () => {
-        if (!isLoading) {
-            form.reset();
-            setError(null);
-            onOpenChange(false);
-        }
+        form.reset();
+        onOpenChange(false);
     };
-
-    const watchedAmount = form.watch("amount");
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent
+                className="sm:max-w-md [&>button]:hidden"
+                onInteractOutside={(e) => e.preventDefault()}
+                onEscapeKeyDown={(e) => e.preventDefault()}
+            >
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <div className="p-2 bg-green-100 rounded-lg">
-                            <Plus className="h-4 w-4 text-green-600" />
+                            <DollarSign className="h-4 w-4 text-green-600" />
                         </div>
                         Deposit Money
                     </DialogTitle>
                     <DialogDescription>
-                        Add money to your account. Enter the amount you want to deposit.
+                        Add money to your account. Enter the amount you want to
+                        deposit.
                     </DialogDescription>
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
-                        {/* Amount Input */}
+                    <form
+                        onSubmit={form.handleSubmit(handleDeposit)}
+                        className="space-y-4"
+                    >
                         <FormField
                             control={form.control}
                             name="amount"
@@ -124,27 +106,22 @@ export function DepositModal({ open, onOpenChange, onSuccess }: DepositModalProp
                                             <Input
                                                 {...field}
                                                 type="number"
-                                                step="0.01"
+                                                step="1"
                                                 min="1"
-                                                max="10000"
-                                                placeholder="0.00"
+                                                placeholder="0"
                                                 className="pl-10"
                                                 disabled={isLoading}
                                             />
                                         </div>
                                     </FormControl>
                                     <FormMessage />
+                                    <p className="text-xs text-muted-foreground">
+                                        Enter the amount you want to deposit.
+                                        Minimum $1, Maximum $1,000,000.
+                                    </p>
                                 </FormItem>
                             )}
                         />
-
-
-                        {/* Error Alert */}
-                        {error && (
-                            <Alert variant="destructive">
-                                <AlertDescription>{error}</AlertDescription>
-                            </Alert>
-                        )}
 
                         <DialogFooter className="gap-2">
                             <Button
@@ -157,11 +134,14 @@ export function DepositModal({ open, onOpenChange, onSuccess }: DepositModalProp
                             </Button>
                             <Button
                                 type="submit"
-                                disabled={isLoading || !form.formState.isValid}
-                                className="bg-green-600 hover:bg-green-700"
+                                disabled={isLoading}
+                                className="min-w-[84px]"
                             >
-                                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Deposit {watchedAmount && `$${watchedAmount}`}
+                                {isLoading ? (
+                                    <Loader className="size-4 animate-spin" />
+                                ) : (
+                                    <>Deposit</>
+                                )}
                             </Button>
                         </DialogFooter>
                     </form>
