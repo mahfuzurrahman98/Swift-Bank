@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import { CustomError } from '@/utils/custom-error';
+import mongoose from "mongoose";
+import { CustomError } from "@/utils/custom-error";
 
 // Global connection cache to reuse database connections
 let cachedConnection: typeof mongoose | null = null;
@@ -34,19 +34,22 @@ const connectionOptions: mongoose.ConnectOptions = {
 export async function connectMongo(): Promise<typeof mongoose> {
     // Return cached connection if available
     if (cachedConnection) {
-        console.log('📦 Using cached MongoDB connection');
+        console.log("📦 Using cached MongoDB connection");
         return cachedConnection;
     }
 
     try {
         // Get MongoDB URI from environment variables
-        const mongoUri = process.env.MONGODB_URI;
+        const mongoUri = process.env.DATABASE_URL;
 
         if (!mongoUri) {
-            throw new CustomError(500, 'MONGODB_URI environment variable is not defined');
+            throw new CustomError(
+                500,
+                "DATABASE_URL environment variable is not defined"
+            );
         }
 
-        console.log('🔌 Connecting to MongoDB...');
+        console.log("🔌 Connecting to MongoDB...");
 
         // Establish new connection
         const connection = await mongoose.connect(mongoUri, connectionOptions);
@@ -55,36 +58,37 @@ export async function connectMongo(): Promise<typeof mongoose> {
         cachedConnection = connection;
 
         // Connection event listeners
-        mongoose.connection.on('connected', () => {
-            console.log('✅ MongoDB connected successfully');
+        mongoose.connection.on("connected", () => {
+            console.log("✅ MongoDB connected successfully");
         });
 
-        mongoose.connection.on('error', (error) => {
-            console.error('❌ MongoDB connection error:', error);
+        mongoose.connection.on("error", (error) => {
+            console.error("❌ MongoDB connection error:", error);
             cachedConnection = null; // Clear cache on error
         });
 
-        mongoose.connection.on('disconnected', () => {
-            console.log('🔌 MongoDB disconnected');
+        mongoose.connection.on("disconnected", () => {
+            console.log("🔌 MongoDB disconnected");
             cachedConnection = null; // Clear cache on disconnect
         });
 
         // Graceful shutdown handling
-        process.on('SIGINT', async () => {
+        process.on("SIGINT", async () => {
             try {
                 await mongoose.connection.close();
-                console.log('🔒 MongoDB connection closed through app termination');
+                console.log(
+                    "🔒 MongoDB connection closed through app termination"
+                );
                 process.exit(0);
             } catch (error) {
-                console.error('Error closing MongoDB connection:', error);
+                console.error("Error closing MongoDB connection:", error);
                 process.exit(1);
             }
         });
 
         return connection;
-
     } catch (error: any) {
-        console.error('❌ Failed to connect to MongoDB:', error.message);
+        console.error("❌ Failed to connect to MongoDB:", error.message);
         cachedConnection = null; // Clear cache on failure
 
         throw new CustomError(
@@ -104,6 +108,6 @@ export async function disconnectMongo(): Promise<void> {
     if (cachedConnection) {
         await mongoose.connection.close();
         cachedConnection = null;
-        console.log('🔒 MongoDB connection closed and cache cleared');
+        console.log("🔒 MongoDB connection closed and cache cleared");
     }
 }

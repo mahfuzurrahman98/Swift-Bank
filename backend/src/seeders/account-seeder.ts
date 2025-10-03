@@ -509,13 +509,13 @@ async function main() {
         console.log("=".repeat(60));
 
         // Connect to MongoDB
-        const MONGODB_URI = process.env.MONGODB_URI;
-        if (!MONGODB_URI) {
-            throw new Error("MONGODB_URI environment variable is not set");
+        const DATABASE_URL = process.env.DATABASE_URL;
+        if (!DATABASE_URL) {
+            throw new Error("DATABASE_URL environment variable is not set");
         }
 
         console.log("\n🔌 Connecting to MongoDB...");
-        await mongoose.connect(MONGODB_URI);
+        await mongoose.connect(DATABASE_URL);
         console.log("✅ Connected to MongoDB");
 
         // Phase 1a: Cleanup orphaned accounts (accounts without users)
