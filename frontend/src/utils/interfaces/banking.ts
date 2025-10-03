@@ -69,7 +69,7 @@ export interface TransferRequest {
 }
 
 export interface AddBeneficiaryRequest {
-    beneficiaryAccountId: string;
+    beneficiaryId: string;
 }
 
 // API Response interfaces
@@ -83,6 +83,15 @@ export interface BeneficiaryResponse {
 
 export interface BeneficiariesResponse {
     beneficiaries: Beneficiary[];
+    meta: {
+        total: number;
+        pagination: {
+            page: number;
+            limit: number;
+            totalPages: number;
+            hasMore: boolean;
+        };
+    };
 }
 
 export interface TransactionResponse {
