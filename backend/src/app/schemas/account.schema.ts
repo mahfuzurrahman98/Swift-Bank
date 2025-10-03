@@ -1,6 +1,36 @@
 import { string, number, object, boolean, nativeEnum } from "zod";
 import { TransactionType } from "@/app/enums/transaction.enum";
 import { paginationSchema } from "@/app/schemas/common";
+import { isValidObjectId } from "mongoose";
+
+// MongoDB ObjectId schemas with context-specific messages
+const accountIdSchema = string()
+    .trim()
+    .min(1, "Account ID is required")
+    .refine(isValidObjectId, {
+        message: "Please enter a valid account no. (24 hex characters)",
+    });
+
+const userIdSchema = string()
+    .trim()
+    .min(1, "User ID is required")
+    .refine(isValidObjectId, {
+        message: "Please enter a valid user ID (24 hex characters)",
+    });
+
+const beneficiaryIdSchema = string()
+    .trim()
+    .min(1, "Beneficiary ID is required")
+    .refine(isValidObjectId, {
+        message: "Please enter a valid beneficiary ID (24 hex characters)",
+    });
+
+const genericIdSchema = string()
+    .trim()
+    .min(1, "ID is required")
+    .refine(isValidObjectId, {
+        message: "Please enter a valid ID (24 hex characters)",
+    });
 
 export const depositSchema = object({
     amount: number()
@@ -15,45 +45,18 @@ export const withdrawSchema = object({
 });
 
 export const transferSchema = object({
-    toAccountId: string().trim().min(1, "Destination account ID is required"),
+    toAccountId: accountIdSchema,
     amount: number()
         .positive("Amount must be positive")
         .max(1000000, "Amount cannot exceed $1,000,000"),
 });
 
 export const addBeneficiarySchema = object({
-    beneficiaryId: string().trim().min(1, "Beneficiary ID is required"),
+    beneficiaryId: beneficiaryIdSchema,
 });
 
 export const beneficiaryIdParamSchema = object({
-    _id: string().trim().min(1, "Beneficiary ID is required"),
-});
-
-export const createAccountSchema = object({
-    userId: string().trim().min(1, "User ID is required"),
-    balance: number().min(0, "Balance cannot be negative").optional(),
-    active: boolean().optional(),
-});
-
-export const updateAccountSchema = object({
-    active: boolean().optional(),
-});
-
-export const createBeneficiarySchema = object({
-    beneficiaryId: string().trim().min(1, "Beneficiary ID is required"),
-});
-
-export const updateBeneficiarySchema = object({
-    beneficiaryId: string().trim().min(1, "Beneficiary ID is required"),
-});
-
-export const accountQuerySchema = object({
-    userId: string().trim().optional(),
-    active: boolean().optional(),
-});
-
-export const beneficiaryQuerySchema = object({
-    accountId: string().trim().optional(),
+    _id: genericIdSchema,
 });
 
 export const transactionsQueryParamsSchema = paginationSchema
