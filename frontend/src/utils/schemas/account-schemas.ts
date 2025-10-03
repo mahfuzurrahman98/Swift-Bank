@@ -1,11 +1,4 @@
-import {
-    string,
-    number,
-    object,
-    boolean,
-    nativeEnum,
-    type infer as zInfer,
-} from "zod";
+import { string, number, object, nativeEnum, type infer as zInfer } from "zod";
 import { paginationSchema } from "@/utils/schemas/common-schemas";
 import { TransactionType } from "@/utils/enums/transaction";
 import { isValidMongoIdRegex } from "@/utils/helpers";

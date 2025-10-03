@@ -3,7 +3,13 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { AuthService } from "@/services/auth-services";
 import { useAuthStore } from "@/stores/auth-store";
 import { NavigationPaths } from "@/utils/enums/navigation-paths";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertMessage } from "@/components/ui/custom/alert-message";
 import { CheckCircle, XCircle, Loader2, ArrowLeft } from "lucide-react";
@@ -12,7 +18,7 @@ export default function MagicLinkVerifyPage() {
     const { token } = useParams<{ token: string }>();
     const navigate = useNavigate();
     const { setUser, setAccessToken } = useAuthStore();
-    
+
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -33,7 +39,7 @@ export default function MagicLinkVerifyPage() {
             setError(null);
 
             const response = await AuthService.verifyMagicLink(token!);
-            
+
             if (response.data) {
                 // Set auth state
                 setAccessToken(response.data.accessToken);
@@ -78,7 +84,8 @@ export default function MagicLinkVerifyPage() {
 
     const getDescription = () => {
         if (isLoading) return "Please wait while we verify your magic link";
-        if (success) return "You have been successfully signed in. Redirecting to dashboard...";
+        if (success)
+            return "You have been successfully signed in. Redirecting to dashboard...";
         return "There was a problem verifying your magic link";
     };
 
@@ -86,7 +93,9 @@ export default function MagicLinkVerifyPage() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
-                    <div className={`mx-auto mb-4 p-3 rounded-full w-fit ${getStatusColor()}`}>
+                    <div
+                        className={`mx-auto mb-4 p-3 rounded-full w-fit ${getStatusColor()}`}
+                    >
                         {getStatusIcon()}
                     </div>
                     <CardTitle className="text-2xl font-bold">
@@ -100,13 +109,16 @@ export default function MagicLinkVerifyPage() {
                     {error && (
                         <>
                             <AlertMessage type="error" message={error} />
-                            
+
                             <div className="space-y-2">
                                 <p className="text-sm text-muted-foreground text-center">
                                     This could happen if:
                                 </p>
                                 <ul className="text-sm text-muted-foreground space-y-1 pl-4">
-                                    <li>• The link has expired (links expire after 10 minutes)</li>
+                                    <li>
+                                        • The link has expired (links expire
+                                        after 10 minutes)
+                                    </li>
                                     <li>• The link has already been used</li>
                                     <li>• A newer magic link was requested</li>
                                     <li>• The link is malformed or invalid</li>
@@ -115,11 +127,15 @@ export default function MagicLinkVerifyPage() {
 
                             <div className="space-y-2">
                                 <Button asChild className="w-full">
-                                    <Link to={NavigationPaths.AUTH_MAGIC_LINK}>
+                                    <Link to={NavigationPaths.AUTH_SIGNIN}>
                                         Request New Magic Link
                                     </Link>
                                 </Button>
-                                <Button asChild variant="outline" className="w-full">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="w-full"
+                                >
                                     <Link to={NavigationPaths.AUTH_SIGNIN}>
                                         <ArrowLeft className="h-4 w-4 mr-2" />
                                         Back to Sign In
@@ -132,7 +148,8 @@ export default function MagicLinkVerifyPage() {
                     {success && (
                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                             <p className="text-sm text-green-800 text-center">
-                                🎉 Authentication successful! You will be redirected to your dashboard shortly.
+                                🎉 Authentication successful! You will be
+                                redirected to your dashboard shortly.
                             </p>
                         </div>
                     )}

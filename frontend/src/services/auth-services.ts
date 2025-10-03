@@ -3,15 +3,8 @@ import {
     createRequest,
     type ApiResponse,
 } from "@/api/fetchClient";
-import { useAuthStore } from "@/stores/auth-store";
-import type {
-    SigninResponse,
-    ResetPasswordResponse,
-    ForgotPasswordResponse,
-} from "@/utils/interfaces/auth-interfaces";
-import type {
-    MagicLinkPayload,
-} from "@/utils/schemas/auth-schema";
+import type { SigninResponse } from "@/utils/interfaces/auth-interfaces";
+import type { MagicLinkPayload } from "@/utils/schemas/auth-schema";
 
 /**
  * Authentication Service
