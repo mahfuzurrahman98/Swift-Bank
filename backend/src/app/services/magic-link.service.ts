@@ -10,8 +10,7 @@ import { CustomError } from "@/utils/custom-error";
 import { DeviceInfo } from "@/app/interfaces/magic-link.interface";
 import { UserRole, UserStatus } from "@/app/enums/user";
 import { InvalidateByType, DeviceType } from "@/app/enums/magic-link.enum";
-import { SigninResponseDTO } from "../dtos/auth.dto";
-import { User } from "../interfaces/user.interface";
+import { User } from "@/app/interfaces/user.interface";
 
 @autoInjectable()
 export class MagicLinkService {
@@ -29,7 +28,7 @@ export class MagicLinkService {
     extractDeviceInfo(request: Request): DeviceInfo {
         const userAgent = request.headers["user-agent"] || "Unknown";
         const ipAddress =
-            request.ip || request.connection.remoteAddress || "Unknown";
+            request.ip || request.socket.remoteAddress || "Unknown";
 
         // Simple device type detection based on user agent
         let deviceType = DeviceType.DESKTOP;
@@ -48,6 +47,10 @@ export class MagicLinkService {
         ) {
             deviceType = DeviceType.TABLET;
         }
+
+        console.log("\n----------------------\n[userAgent]:", userAgent);
+        console.log("[ipAddress]:", ipAddress);
+        console.log("[deviceType]:", deviceType);
 
         return {
             userAgent,
@@ -118,15 +121,6 @@ export class MagicLinkService {
 
             // 2. Rate limiting check - max 3 requests per 10 minutes (by email for non-existent users)
             const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-            const rateLimitQuery = user
-                ? { userId: user._id.toString() }
-                : {
-                      // For non-existent users, we'll store email in a temp field
-                      // This is a workaround since we don't have userId yet
-                      createdAt: { $gte: tenMinutesAgo },
-                      deletedAt: null,
-                      // We'll use a different approach - check by email in token generation
-                  };
 
             let recentRequests = 0;
             if (user) {
@@ -269,18 +263,15 @@ export class MagicLinkService {
 
             // 3. Find or create user
             let user;
-            
+
             // Check if userIdOrEmail is an email (contains @) or a user ID
-            if (userIdOrEmail.includes('@')) {
+            if (userIdOrEmail.includes("@")) {
                 // It's an email, search by email only
                 user = await UserModel.findOne({ email: userIdOrEmail });
             } else {
                 // It's a user ID, search by ID first, then fallback to email
                 user = await UserModel.findOne({
-                    $or: [
-                        { _id: userIdOrEmail },
-                        { email: userIdOrEmail },
-                    ],
+                    $or: [{ _id: userIdOrEmail }, { email: userIdOrEmail }],
                 });
             }
 
