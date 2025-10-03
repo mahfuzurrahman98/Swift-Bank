@@ -155,8 +155,6 @@ export class BeneficiaryService {
             const totalPages = Math.ceil(total / limit);
             const hasMore = page < totalPages;
 
-            console.log("paginatedBeneficiaries:", paginatedBeneficiaries);
-
             return {
                 beneficiaries: paginatedBeneficiaries,
                 meta: {

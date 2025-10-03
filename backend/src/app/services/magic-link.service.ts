@@ -48,10 +48,6 @@ export class MagicLinkService {
             deviceType = DeviceType.TABLET;
         }
 
-        console.log("\n----------------------\n[userAgent]:", userAgent);
-        console.log("[ipAddress]:", ipAddress);
-        console.log("[deviceType]:", deviceType);
-
         return {
             userAgent,
             ipAddress,

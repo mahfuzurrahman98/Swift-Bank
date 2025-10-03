@@ -135,7 +135,7 @@ export class AccountService {
                 await SelfTransactionModel.create({
                     accountId: account._id,
                     amount,
-                    type: "deposit",
+                    type: TransactionType.DEPOSIT,
                     balance: account.balance,
                 });
 
@@ -182,7 +182,7 @@ export class AccountService {
                 await SelfTransactionModel.create({
                     accountId: account._id,
                     amount,
-                    type: "withdraw",
+                    type: TransactionType.WITHDRAWAL,
                     balance: account.balance,
                 });
 
@@ -599,10 +599,6 @@ export class AccountService {
                         createdAt: transaction.createdAt,
                     })),
                 ];
-
-                console.log("selfTransactions_length", selfTransactions.length);
-                console.log("fundTransfers_length", fundTransfers.length);
-                console.log("combined_length", combinedTransactions.length);
             }
 
             // Sort by creation date
