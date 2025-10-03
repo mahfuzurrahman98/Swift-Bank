@@ -49,6 +49,7 @@ export function TransactionTable({
                         <Skeleton className="h-4 w-32" />
                         <Skeleton className="h-4 w-24" />
                         <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-20" />
                     </div>
                 ))}
             </div>
@@ -72,6 +73,7 @@ export function TransactionTable({
                         <TableHead>Type</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead className="text-right">Amount</TableHead>
+                        <TableHead className="text-right">Balance</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -108,6 +110,9 @@ export function TransactionTable({
                                         transaction.type
                                     )}
                                 </span>
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                                ${transaction.balance.toFixed(2)}
                             </TableCell>
                         </TableRow>
                     ))}
