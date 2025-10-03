@@ -60,13 +60,11 @@ export class AuthController {
             const { email } = requestMagicLinkSchema.parse(request.body);
             const deviceInfo = this.magicLinkService.extractDeviceInfo(request);
 
-            const result = await this.magicLinkService.requestMagicLink(
-                email,
-                deviceInfo
-            );
+            await this.magicLinkService.requestMagicLink(email, deviceInfo);
 
             response.status(200).json({
-                message: "Magic link sent to your email. Please check your inbox.",
+                message:
+                    "Magic link sent to your email. Please check your inbox.",
             });
         } catch (error: any) {
             next(formatError(error));
