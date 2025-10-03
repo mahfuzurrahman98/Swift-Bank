@@ -11,7 +11,7 @@ import SigninPage from "@/pages/auth/SigninPage";
 import MagicLinkVerifyPage from "@/pages/auth/MagicLinkVerifyPage";
 
 // Banking Pages
-import BankingDashboardPage from "@/pages/banking/BankingDashboardPage";
+import DashboardPage from "@/pages/DashboardPage";
 import TransactionsPage from "@/pages/banking/TransactionsPage";
 import BeneficiariesPage from "@/pages/banking/BeneficiariesPage";
 
@@ -44,7 +44,7 @@ const routes: Route[] = [
     // --------------- Banking routes ---------------
     {
         path: NavigationPaths.DASHBOARD,
-        element: BankingDashboardPage,
+        element: DashboardPage,
         protection: Protection.PRIVATE,
         allowedRoles: [UserRole.ACCOUNT_HOLDER],
     },
