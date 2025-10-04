@@ -188,18 +188,15 @@ export class MagicLinkService {
             const magicLinkUrl = `${process.env.FRONTEND_URL}/auth/verify-magic-link/${rawToken}`;
 
             // Get display name for email
-            const displayName = user
-                ? user.name
-                : email.split("@")[0].charAt(0).toUpperCase() +
-                  email.split("@")[0].slice(1);
+            const displayName = user?.email;
 
             const emailHtml = await this.emailService.renderTemplate(
-                "auth/magic-link",
+                "email-templates/auth/magic-link",
                 {
                     userName: displayName,
                     magicLink: magicLinkUrl,
                     expiryMinutes: 10,
-                    appName: "Swift Bank",
+                    appName: process.env.APP_NAME,
                 }
             );
 

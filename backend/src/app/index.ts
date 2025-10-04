@@ -1,7 +1,10 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
+import ejs from "ejs";
 import http from "http";
+import helmet from "helmet";
 import router from "@/app/routes";
 import { connectMongo } from "@/app/data-source";
 import { CustomError } from "@/utils/custom-error";
@@ -10,14 +13,58 @@ import { resolveServerDownIssue } from "@/utils/helpers/misc";
 const app: Express = express();
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://127.0.0.1:5173";
+const APP_ENV = process.env.APP_ENV || "development";
+
+// Security headers
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                scriptSrc: ["'self'"],
+                imgSrc: ["'self'", "data:", "https:"],
+            },
+        },
+        hsts:
+            APP_ENV === "production"
+                ? {
+                      maxAge: 31536000,
+                      includeSubDomains: true,
+                      preload: true,
+                  }
+                : false,
+    })
+);
 
 // use middlewares
-app.use(cors({ origin: [FRONTEND_URL], credentials: true }));
-app.use(express.json());
+const allowedOrigins = [FRONTEND_URL];
+app.use(
+    cors({
+        origin: allowedOrigins,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
-// add publuc folder as static folder
+// add public folder as static folder
 app.use(express.static("public"));
+
+// serve uploaded files
+app.use("/uploads", express.static("uploads"));
+
+// set ejs as the view engine
+app.engine("html", ejs.renderFile);
+app.engine("ejs", ejs.renderFile);
+app.set("view engine", "ejs");
+
+// set view paths
+const viewsPath = path.join(__dirname, "../app/templates");
+app.set("views", viewsPath);
 
 export async function startServer(): Promise<Express> {
     try {
@@ -31,10 +78,6 @@ export async function startServer(): Promise<Express> {
     const FORCE_SHOW_ERROR = process.env.FORCE_SHOW_ERROR === "true";
     const showError = APP_DEBUG || FORCE_SHOW_ERROR;
 
-    // setupContainer();
-
-    // Dynamically import routes after the container is configured
-
     // index route
     app.get("/", (request: Request, response: Response) => {
         response.json({
@@ -43,6 +86,10 @@ export async function startServer(): Promise<Express> {
             version: process.env.APP_VERSION || "1.0.0",
         });
     });
+
+    // Apply auth rate limiter to auth routes
+    // app.use('/auth/signin', authLimiter);
+    // app.use('/auth/refresh-token', authLimiter);
 
     // use routes
     app.use("/", router);
@@ -66,6 +113,11 @@ export async function startServer(): Promise<Express> {
                     `\nError occurred: {${error.message}}`,
                     "\n---------------------------------------------\n"
                 );
+
+            if (showError) {
+                console.error(error);
+            }
+
             if (error instanceof CustomError) {
                 if (error.getStatusCode() && error.getStatusCode() != 500) {
                     response.status(error.getStatusCode()).json({

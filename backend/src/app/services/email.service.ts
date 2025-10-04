@@ -61,7 +61,7 @@ export class EmailService {
     async sendMail(recipients: string[], subject: string, html: string) {
         try {
             await this.transporter.sendMail({
-                from: `"ProjectName" <${process.env.SMTP_USER}>`, // sender address
+                from: `${process.env.APP_NAME} <${process.env.SMTP_USER}>`, // sender address
                 to: recipients, // list of receivers
                 subject, // Subject line
                 html, // html body
