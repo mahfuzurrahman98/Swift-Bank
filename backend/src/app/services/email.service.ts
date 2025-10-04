@@ -60,6 +60,13 @@ export class EmailService {
      */
     async sendMail(recipients: string[], subject: string, html: string) {
         try {
+            console.log("SMTP_HOST:", process.env.SMTP_HOST);
+            console.log("SMTP_PORT:", process.env.SMTP_PORT);
+            console.log("SMTP_USER:", process.env.SMTP_USER);
+            console.log("SMTP_PASS:", process.env.SMTP_PASS);
+            console.log("APP_NAME:", process.env.APP_NAME);
+            console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
+
             await this.transporter.sendMail({
                 from: `${process.env.APP_NAME} <${process.env.SMTP_USER}>`, // sender address
                 to: recipients, // list of receivers
@@ -67,6 +74,7 @@ export class EmailService {
                 html, // html body
             });
         } catch (error: any) {
+            console.log("error_in_sendMail:", error);
             throw error instanceof CustomError
                 ? error
                 : new CustomError(

@@ -200,6 +200,8 @@ export class MagicLinkService {
                 }
             );
 
+            console.log("emailHtml:", emailHtml);
+
             await this.emailService.sendMail(
                 [email.toLowerCase()],
                 "🔐 Sign in to Swift Bank",

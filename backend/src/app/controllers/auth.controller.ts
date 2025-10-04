@@ -60,6 +60,9 @@ export class AuthController {
             const { email } = requestMagicLinkSchema.parse(request.body);
             const deviceInfo = this.magicLinkService.extractDeviceInfo(request);
 
+            console.log("email:", email);
+            console.log("deviceInfo:", deviceInfo);
+
             await this.magicLinkService.requestMagicLink(email, deviceInfo);
 
             response.status(200).json({
