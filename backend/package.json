@@ -1,10 +1,11 @@
 {
     "name": "swift-bank-backend",
     "version": "1.0.0",
-    "description": "Industry-standard Express.js backend for Swift Banking application",
+    "description": "Express.js backend for Swift Banking application",
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc",
+        "postbuild": "mkdir -p dist/app/templates && cp -r src/app/templates/* dist/app/templates/",
         "start": "node -r module-alias/register dist/index.js",
         "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/index.ts",
         "lint": "eslint src/**/*.ts",
