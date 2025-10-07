@@ -6,6 +6,7 @@ import { CustomError } from "@/utils/custom-error";
 
 export class EmailService {
     private transporter: Transporter;
+    private useResend: boolean;
 
     /**
      * Constructor for EmailService.
@@ -14,7 +15,7 @@ export class EmailService {
         this.transporter = createTransport({
             host: process.env.SMTP_HOST,
             port: Number(process.env.SMTP_PORT),
-            secure: false, // Use `true` for port 465, `false` for all other ports
+            secure: true,
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS,
@@ -53,26 +54,30 @@ export class EmailService {
     }
 
     /**
-     * Send an email
+     * Send an email using Resend API or SMTP fallback
      * @param recipients Array of recipient email addresses
      * @param subject Email subject
      * @param html HTML content of the email
      */
     async sendMail(recipients: string[], subject: string, html: string) {
         try {
-            console.log("SMTP_HOST:", process.env.SMTP_HOST);
-            console.log("SMTP_PORT:", process.env.SMTP_PORT);
-            console.log("SMTP_USER:", process.env.SMTP_USER);
-            console.log("SMTP_PASS:", process.env.SMTP_PASS);
-            console.log("APP_NAME:", process.env.APP_NAME);
-            console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
+            if (this.useResend) {
+                // Use Resend HTTP API for production
+                await this.sendWithResend(recipients, subject, html);
+            } else {
+                // Use SMTP for local development
+                if (!this.transporter) {
+                    throw new Error("SMTP transporter not initialized");
+                }
 
-            await this.transporter.sendMail({
-                from: `${process.env.APP_NAME} <${process.env.SMTP_USER}>`, // sender address
-                to: recipients, // list of receivers
-                subject, // Subject line
-                html, // html body
-            });
+                console.log("Using SMTP for email sending...");
+                await this.transporter.sendMail({
+                    from: `${process.env.APP_NAME} <${process.env.SMTP_USER}>`,
+                    to: recipients,
+                    subject,
+                    html,
+                });
+            }
         } catch (error: any) {
             console.log("error_in_sendMail:", error);
             throw error instanceof CustomError
@@ -84,5 +89,40 @@ export class EmailService {
                       }`
                   );
         }
+    }
+
+    /**
+     * Send email using Resend HTTP API
+     * @param recipients Array of recipient email addresses
+     * @param subject Email subject
+     * @param html HTML content of the email
+     */
+    private async sendWithResend(
+        recipients: string[],
+        subject: string,
+        html: string
+    ) {
+        const response = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                from: `${process.env.APP_NAME} <noreply@swiftbank.dev>`, // Replace with your verified domain
+                to: recipients,
+                subject,
+                html,
+            }),
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            throw new Error(`Resend API error: ${error}`);
+        }
+
+        const result = await response.json();
+        console.log("Email sent via Resend:", result.id);
+        return result;
     }
 }
