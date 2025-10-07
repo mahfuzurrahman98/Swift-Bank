@@ -1,11 +1,12 @@
 import { Request } from "express";
 import { autoInjectable } from "tsyringe";
-import * as crypto from "crypto";
 import * as bcrypt from "bcrypt";
+import * as crypto from "crypto";
 import { UserModel } from "@/app/models/user.model";
 import { AccountModel } from "@/app/models/account.model";
 import { MagicLinkTokenModel } from "@/app/models/magic-link-token.model";
 import { EmailService } from "@/app/services/email.service";
+import { MailtrapEmailService } from "@/app/services/mailtrap-email.service";
 import { CustomError } from "@/utils/custom-error";
 import { DeviceInfo } from "@/app/interfaces/magic-link.interface";
 import { UserRole, UserStatus } from "@/app/enums/user";
@@ -14,10 +15,10 @@ import { User } from "@/app/interfaces/user.interface";
 
 @autoInjectable()
 export class MagicLinkService {
-    private emailService: EmailService;
+    private emailService: MailtrapEmailService;
 
     constructor() {
-        this.emailService = new EmailService();
+        this.emailService = new MailtrapEmailService();
     }
 
     /**

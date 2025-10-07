@@ -90,79 +90,77 @@ export default function MagicLinkVerifyPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader className="text-center">
-                    <div
-                        className={`mx-auto mb-4 p-3 rounded-full w-fit ${getStatusColor()}`}
-                    >
-                        {getStatusIcon()}
+        <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
+                <div
+                    className={`mx-auto mb-4 p-3 rounded-full w-fit ${getStatusColor()}`}
+                >
+                    {getStatusIcon()}
+                </div>
+                <CardTitle className="text-2xl font-bold">
+                    {getTitle()}
+                </CardTitle>
+                <CardDescription className="text-base">
+                    {getDescription()}
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                {error && (
+                    <>
+                        <AlertMessage type="error" message={error} />
+
+                        <div className="space-y-2">
+                            <p className="text-sm text-muted-foreground text-center">
+                                This could happen if:
+                            </p>
+                            <ul className="text-sm text-muted-foreground space-y-1 pl-4">
+                                <li>
+                                    • The link has expired (links expire after
+                                    10 minutes)
+                                </li>
+                                <li>• The link has already been used</li>
+                                <li>• A newer magic link was requested</li>
+                                <li>• The link is malformed or invalid</li>
+                            </ul>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Button asChild className="w-full">
+                                <Link to={NavigationPaths.AUTH_SIGNIN}>
+                                    Request New Magic Link
+                                </Link>
+                            </Button>
+                            <Button
+                                asChild
+                                variant="outline"
+                                className="w-full"
+                            >
+                                <Link to={NavigationPaths.AUTH_SIGNIN}>
+                                    <ArrowLeft className="h-4 w-4 mr-2" />
+                                    Back to Sign In
+                                </Link>
+                            </Button>
+                        </div>
+                    </>
+                )}
+
+                {success && (
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-sm text-green-800 text-center">
+                            🎉 Authentication successful! You will be redirected
+                            to your dashboard shortly.
+                        </p>
                     </div>
-                    <CardTitle className="text-2xl font-bold">
-                        {getTitle()}
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                        {getDescription()}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    {error && (
-                        <>
-                            <AlertMessage type="error" message={error} />
+                )}
 
-                            <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground text-center">
-                                    This could happen if:
-                                </p>
-                                <ul className="text-sm text-muted-foreground space-y-1 pl-4">
-                                    <li>
-                                        • The link has expired (links expire
-                                        after 10 minutes)
-                                    </li>
-                                    <li>• The link has already been used</li>
-                                    <li>• A newer magic link was requested</li>
-                                    <li>• The link is malformed or invalid</li>
-                                </ul>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Button asChild className="w-full">
-                                    <Link to={NavigationPaths.AUTH_SIGNIN}>
-                                        Request New Magic Link
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    className="w-full"
-                                >
-                                    <Link to={NavigationPaths.AUTH_SIGNIN}>
-                                        <ArrowLeft className="h-4 w-4 mr-2" />
-                                        Back to Sign In
-                                    </Link>
-                                </Button>
-                            </div>
-                        </>
-                    )}
-
-                    {success && (
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                            <p className="text-sm text-green-800 text-center">
-                                🎉 Authentication successful! You will be
-                                redirected to your dashboard shortly.
-                            </p>
-                        </div>
-                    )}
-
-                    {isLoading && (
-                        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p className="text-sm text-blue-800 text-center">
-                                🔐 Securely verifying your identity...
-                            </p>
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
-        </div>
+                {isLoading && (
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p className="text-sm text-blue-800 text-center">
+                            🔐 Securely verifying your identity...
+                        </p>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
     );
 }
