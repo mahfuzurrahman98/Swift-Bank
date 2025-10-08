@@ -385,9 +385,14 @@ export class AccountService {
                             as: "fromAccount",
                             pipeline: [
                                 {
+                                    $addFields: {
+                                        userIdObj: { $toObjectId: "$userId" },
+                                    },
+                                },
+                                {
                                     $lookup: {
                                         from: "users",
-                                        localField: "userId",
+                                        localField: "userIdObj",
                                         foreignField: "_id",
                                         as: "user",
                                         pipeline: [{ $project: { name: 1 } }],
@@ -396,6 +401,7 @@ export class AccountService {
                                 {
                                     $project: {
                                         _id: 1,
+                                        userId: 1, // Add userId for debugging
                                         user: { $arrayElemAt: ["$user", 0] },
                                     },
                                 },
@@ -410,9 +416,14 @@ export class AccountService {
                             as: "toAccount",
                             pipeline: [
                                 {
+                                    $addFields: {
+                                        userIdObj: { $toObjectId: "$userId" },
+                                    },
+                                },
+                                {
                                     $lookup: {
                                         from: "users",
-                                        localField: "userId",
+                                        localField: "userIdObj",
                                         foreignField: "_id",
                                         as: "user",
                                         pipeline: [{ $project: { name: 1 } }],
@@ -421,6 +432,7 @@ export class AccountService {
                                 {
                                     $project: {
                                         _id: 1,
+                                        userId: 1, // Add userId for debugging
                                         user: { $arrayElemAt: ["$user", 0] },
                                     },
                                 },
@@ -498,9 +510,16 @@ export class AccountService {
                                 as: "fromAccount",
                                 pipeline: [
                                     {
+                                        $addFields: {
+                                            userIdObj: {
+                                                $toObjectId: "$userId",
+                                            },
+                                        },
+                                    },
+                                    {
                                         $lookup: {
                                             from: "users",
-                                            localField: "userId",
+                                            localField: "userIdObj",
                                             foreignField: "_id",
                                             as: "user",
                                             pipeline: [
@@ -511,6 +530,7 @@ export class AccountService {
                                     {
                                         $project: {
                                             _id: 1,
+                                            userId: 1, // Add userId for debugging
                                             user: {
                                                 $arrayElemAt: ["$user", 0],
                                             },
@@ -527,9 +547,16 @@ export class AccountService {
                                 as: "toAccount",
                                 pipeline: [
                                     {
+                                        $addFields: {
+                                            userIdObj: {
+                                                $toObjectId: "$userId",
+                                            },
+                                        },
+                                    },
+                                    {
                                         $lookup: {
                                             from: "users",
-                                            localField: "userId",
+                                            localField: "userIdObj",
                                             foreignField: "_id",
                                             as: "user",
                                             pipeline: [
@@ -540,6 +567,7 @@ export class AccountService {
                                     {
                                         $project: {
                                             _id: 1,
+                                            userId: 1, // Add userId for debugging
                                             user: {
                                                 $arrayElemAt: ["$user", 0],
                                             },
