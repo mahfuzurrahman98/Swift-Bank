@@ -205,7 +205,7 @@ export class MagicLinkService {
 
             await this.emailService.sendMail(
                 [email.toLowerCase()],
-                "🔐 Sign in to Swift Bank",
+                "💰 Swift Bank - Sign in with magic link",
                 emailHtml
             );
         } catch (error: any) {
